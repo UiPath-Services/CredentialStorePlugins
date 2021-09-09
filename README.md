@@ -1,5 +1,5 @@
-# fantastic-uipath-credential-store-plugins
-UiPath Orchestrator Credential Store Plugins built by UiPath Professional Services
+# Credential Store Plugins
+## Orchestrator Plugins built by the UiPath Professional Services team.
 
 Download the latest releases from the Releases page on the right 👉
 

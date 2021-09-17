@@ -1,7 +1,9 @@
-﻿namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 {
     /// <summary>
-    /// BeyondInsight and Password Safe (v6.4.4+) API v3 Client.
+    /// BeyondInsight and Password Safe (v21.1.0+) API v3 Client.
     /// </summary>
     public class PasswordSafeAPIClient
     {
@@ -14,10 +16,10 @@
         /// The base URL of the Password Safe API, including an explicit placeholder for version number.
         /// <para>i.e. <example>https://the-url/BeyondTrust/api/public/v{0}</example></para>
         /// </param>
-        public PasswordSafeAPIClient(string baseUrl)
+        public PasswordSafeAPIClient(string baseUrl, bool ignoreSSLWarning, X509Certificate2 clientCert)
         {
             BaseUrl = string.Format(baseUrl, this.APIVersion);
-            _connector = new PasswordSafeAPIConnector(BaseUrl);
+            _connector = new PasswordSafeAPIConnector(BaseUrl, ignoreSSLWarning, clientCert);
 
             Auth = new AuthEndpoint(_connector);
             Configuration = new ConfigurationEndpoint(_connector);
@@ -57,12 +59,26 @@
             Sessions = new SessionsEndpoint(_connector);
             SmartRules = new SmartRulesEndpoint(_connector);
             SyncedAccounts = new SyncedAccountsEndpoint(_connector);
+            TeamPasswordsFolders = new TeamPasswordsFoldersEndpoint(_connector);
+            TeamPasswordsCredentials = new TeamPasswordsCredentialsEndpoint(_connector);
             TicketSystems = new TicketSystemsEndpoint(_connector);
             UserGroups = new UserGroupsEndpoint(_connector);
             Users = new UsersEndpoint(_connector);
-            Vulnerabilities = new VulnerabilitiesEndpoint(_connector);
             Workgroups = new WorkgroupsEndpoint(_connector);
         }
+
+        public PasswordSafeAPIClient(string baseUrl) : this(baseUrl, false, null)
+        {
+        }
+
+        public PasswordSafeAPIClient(string baseUrl, bool ignoreSSLWarning) : this(baseUrl, ignoreSSLWarning, null)
+        {
+        }
+
+        public PasswordSafeAPIClient(string baseUrl, X509Certificate2 clientCert) : this(baseUrl, false, clientCert)
+        {
+        }
+
 
         #region Public Properties
 
@@ -274,6 +290,16 @@
         public SyncedAccountsEndpoint SyncedAccounts { get; private set; }
 
         /// <summary>
+        /// TeamPasswordsFolders
+        /// </summary>
+        public TeamPasswordsFoldersEndpoint TeamPasswordsFolders { get; private set; }
+
+        /// <summary>
+        /// TeamPasswordsCredentials
+        /// </summary>
+        public TeamPasswordsCredentialsEndpoint TeamPasswordsCredentials { get; private set; }
+
+        /// <summary>
         /// TicketSystems
         /// </summary>
         public TicketSystemsEndpoint TicketSystems { get; private set; }
@@ -287,11 +313,6 @@
         /// Users
         /// </summary>
         public UsersEndpoint Users { get; private set; }
-
-        /// <summary>
-        /// Vulnerabilities
-        /// </summary>
-        public VulnerabilitiesEndpoint Vulnerabilities { get; private set; }
 
         /// <summary>
         /// Workgroups

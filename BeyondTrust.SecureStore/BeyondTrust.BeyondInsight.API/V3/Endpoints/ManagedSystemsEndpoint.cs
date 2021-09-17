@@ -11,6 +11,14 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         }
 
         /// <summary>
+        /// List of Managed System model versions.
+        /// </summary>
+        public static List<string> Versions = new List<string>() { v30, v31, v32};
+        public const string v30 = "3.0";
+        public const string v31 = "3.1";
+        public const string v32 = "3.2";
+
+        /// <summary>
         /// List of Managed System Account Name formats.
         /// </summary>
         public readonly IReadOnlyDictionary<int, string> AccountNameFormats = new Dictionary<int, string>() {
@@ -31,7 +39,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 , new QueryParameter("name", name)
                 );
 
-            HttpResponseMessage response = _conn.Get($"ManagedSystems{queryParams}");
+            HttpResponseMessage response = _conn.Get($"ManagedSystems/{queryParams}");
             ManagedSystemsResult result = new ManagedSystemsResult(response);
             return result;
         }
@@ -50,7 +58,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 , new QueryParameter("name", name)
                 );
 
-            HttpResponseMessage response = _conn.Get($"ManagedSystems{queryParams}");
+            HttpResponseMessage response = _conn.Get($"ManagedSystems/{queryParams}");
             ManagedSystemsPagedResult result = new ManagedSystemsPagedResult(response);
             return result;
         }
@@ -133,7 +141,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 , new QueryParameter("offset", offset)
                 );
 
-            HttpResponseMessage response = _conn.Get($"FunctionalAccounts/{accountId}/ManagedSystems{queryParams}");
+            HttpResponseMessage response = _conn.Get($"FunctionalAccounts/{accountId}/ManagedSystems/{queryParams}");
             ManagedSystemsPagedResult result = new ManagedSystemsPagedResult(response);
             return result;
         }
@@ -166,10 +174,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// </summary>
         /// <param name="workgroupID">ID of the Workgroup</param>
         /// <param name="model">The Managed System model</param>
+        /// <param name="version">The model version</param>
         /// <returns></returns>
-        public ManagedSystemResult PostInWorkgroup(int workgroupID, ManagedSystemModel model)
+        public ManagedSystemResult PostInWorkgroup(int workgroupID, ManagedSystemModel model, string version = v30)
         {
-            HttpResponseMessage response = _conn.Post($"Workgroups/{workgroupID}/ManagedSystems", model);
+            HttpResponseMessage response = _conn.Post($"Workgroups/{workgroupID}/ManagedSystems/?version={version}", model);
             ManagedSystemResult result = new ManagedSystemResult(response);
             return result;
         }
@@ -180,10 +189,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// </summary>
         /// <param name="assetId">ID of the Asset</param>
         /// <param name="model">The Managed System model</param>
+        /// <param name="version">The model version</param>
         /// <returns></returns>
-        public ManagedSystemResult Post(int assetId, ManagedSystemModel model)
+        public ManagedSystemResult Post(int assetId, ManagedSystemModel model, string version = v30)
         {
-            HttpResponseMessage response = _conn.Post($"Assets/{assetId}/ManagedSystems", model);
+            HttpResponseMessage response = _conn.Post($"Assets/{assetId}/ManagedSystems/?version={version}", model);
             ManagedSystemResult result = new ManagedSystemResult(response);
             return result;
         }
@@ -194,10 +204,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// </summary>
         /// <param name="databaseID">ID of the Database</param>
         /// <param name="model">The Managed System model</param>
+        /// <param name="version">The model version</param>
         /// <returns></returns>
-        public ManagedSystemResult PostByDatabase(int databaseID, ManagedSystemModel model)
+        public ManagedSystemResult PostByDatabase(int databaseID, ManagedSystemModel model, string version = v30)
         {
-            HttpResponseMessage response = _conn.Post($"Databases/{databaseID}/ManagedSystems", model);
+            HttpResponseMessage response = _conn.Post($"Databases/{databaseID}/ManagedSystems/?version={version}", model);
             ManagedSystemResult result = new ManagedSystemResult(response);
             return result;
         }
@@ -220,10 +231,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <para>API: PUT ManagedSystems/{id</para>
         /// </summary>
         /// <param name="id">ID of the Managed System</param>
+        /// <param name="version">The model version</param>
         /// <returns></returns>
-        public ManagedSystemResult Put(int id, ManagedSystemModel model)
+        public ManagedSystemResult Put(int id, ManagedSystemModel model, string version = v30)
         {
-            HttpResponseMessage response = _conn.Put($"ManagedSystems/{id}", model);
+            HttpResponseMessage response = _conn.Put($"ManagedSystems/{id}/?version={version}", model);
             ManagedSystemResult result = new ManagedSystemResult(response);
             return result;
         }

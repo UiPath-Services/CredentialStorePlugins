@@ -190,10 +190,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <summary>
         /// List of Managed Account model versions.
         /// </summary>
-        public static List<string> Versions = new List<string>() { v30, v31, v32 };
+        public static List<string> Versions = new List<string>() { v30, v31, v32, v33 };
         public const string v30 = "3.0";
         public const string v31 = "3.1";
         public const string v32 = "3.2";
+        public const string v33 = "3.3";
 
         /// <summary>
         /// Returns a Managed Account by ID.

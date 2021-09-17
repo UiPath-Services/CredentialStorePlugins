@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 
 namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 {
@@ -36,61 +35,10 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <returns></returns>
         public AuthenticationResult SignAppIn(string apiKey, string username)
         {
-            return SignAppIn(apiKey, username, null, false);
-        }
-
-        /// <summary>
-        /// Authenticates with the server using the given Application API Key, username, and client certificate.
-        /// <para>API: POST Auth/SignAppin</para>
-        /// </summary>
-        /// <param name="apiKey">The Application API Key.</param>
-        /// <param name="username">The username of the user.</param>
-        /// <param name="clientCert">The client certificate to use for authentication.</param>
-        /// <returns></returns>
-        public AuthenticationResult SignAppIn(string apiKey, string username, X509Certificate2 clientCert)
-        {
-            return SignAppIn(apiKey, username, clientCert, false);
-        }
-
-        /// <summary>
-        /// Authenticates with the server using the given Application API Key and username, optionally ignoring any SSL warnings.
-        /// <para>API: POST Auth/SignAppin</para>
-        /// </summary>
-        /// <param name="apiKey">The Application API Key.</param>
-        /// <param name="username">The username of the user.</param>
-        /// <param name="ignoreSSLWarning"></param>
-        /// <returns></returns>
-        public AuthenticationResult SignAppIn(string apiKey, string username, bool ignoreSSLWarning)
-        {
-            return SignAppIn(apiKey, username, null, ignoreSSLWarning);
-        }
-
-        /// <summary>
-        /// Authenticates with the server using the given Application API Key, username, and client certificate, optionally ignoring any SSL warnings.
-        /// <para>API: POST Auth/SignAppin</para>
-        /// </summary>
-        /// <param name="apiKey">The Application API Key.</param>
-        /// <param name="username">The username of the user.</param>
-        /// <param name="clientCert">The client certificate to use for authentication.</param>
-        /// <param name="ignoreSSLWarning">True to ignore SSL warnings, otherwise false.</param>
-        /// <returns></returns>
-        public AuthenticationResult SignAppIn(string apiKey, string username, X509Certificate2 clientCert, bool ignoreSSLWarning)
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-
-            if (clientCert != null)
-                handler.ClientCertificates.Add(clientCert);
-
-            if (ignoreSSLWarning)
-                handler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-
-            _conn.HttpClient = new HttpClient(handler);
-
+            _conn.Reset();
 
             // Use App API Key to Authenticate User
-            _conn.HttpClient.AddDefaultRequestHeader("Authorization", string.Format("PS-Auth key={0}; runas={1};", apiKey, username));
-
-            HttpResponseMessage response = _conn.Post("Auth/SignAppin");
+            HttpResponseMessage response = _conn.Auth("Auth/SignAppin", "Authorization", $"PS-Auth key={apiKey}; runas={username};");
             return ProcessAuthenticationResult(response);
         }
         

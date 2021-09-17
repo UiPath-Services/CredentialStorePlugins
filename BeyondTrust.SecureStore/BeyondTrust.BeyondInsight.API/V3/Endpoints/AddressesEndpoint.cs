@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 
 namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 {

@@ -46,10 +46,6 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         }
     }
 
-    public sealed class RequestableManagedAccountContainer : BaseContainer<RequestableManagedAccountModel>
-    {
-    }
-
     public class RequestableManagedAccountModel
     {
         public int PlatformID { get; set; }
@@ -141,6 +137,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         public bool ChangeIISAppPoolFlag { get; set; }
         public bool RestartIISAppPoolFlag { get; set; }
 
+        // v3.3
+        public int? WorkgroupID { get; set; }
+
         public override string ToString()
         {
             return string.Format(
@@ -173,6 +172,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + "UseOwnCredentials: {27}{0}"
                 + "ChangeIISAppPoolFlag: {28}{0}"
                 + "RestartIISAppPoolFlag: {29}{0}"
+                + "WorkgroupID: {30}{0}"
                 , Environment.NewLine
                 , ManagedAccountID, ManagedSystemID
                 , DomainName, AccountName, DistinguishedName
@@ -182,7 +182,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 , AutoManagementFlag, CheckPasswordFlag, ResetPasswordOnMismatchFlag, ChangePasswordAfterAnyReleaseFlag
                 , ChangeFrequencyType, ChangeFrequencyDays, LastChangeDate, NextChangeDate, ChangeTime
                 , IsSubscribedAccount, ParentAccountID, ChangeTasksFlag
-                , UseOwnCredentials, ChangeIISAppPoolFlag, RestartIISAppPoolFlag
+                , UseOwnCredentials, ChangeIISAppPoolFlag, RestartIISAppPoolFlag, WorkgroupID
                 );
         }
     }
@@ -225,6 +225,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         public bool ChangeIISAppPoolFlag { get; set; }
         public bool RestartIISAppPoolFlag { get; set; }
 
+        // v3.3
+        public int? WorkgroupID { get; set; }
+
         public override string ToString()
         {
             return string.Format(
@@ -253,6 +256,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + "UseOwnCredentials: {22}{0}"
                 + "ChangeIISAppPoolFlag: {23}{0}"
                 + "RestartIISAppPoolFlag: {24}{0}"
+                + "WorkgroupID: {25}{0}"
                 , Environment.NewLine
                 , DomainName, AccountName, Password
                 , Description, ApiEnabled, PasswordRuleID, ReleaseNotificationEmail
@@ -260,7 +264,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 , ReleaseDuration, MaxReleaseDuration, ISAReleaseDuration
                 , AutoManagementFlag, CheckPasswordFlag, ResetPasswordOnMismatchFlag, ChangePasswordAfterAnyReleaseFlag
                 , ChangeFrequencyType, ChangeFrequencyDays, NextChangeDate, ChangeTime, ChangeTasksFlag
-                , UseOwnCredentials, ChangeIISAppPoolFlag, RestartIISAppPoolFlag
+                , UseOwnCredentials, ChangeIISAppPoolFlag, RestartIISAppPoolFlag, WorkgroupID
                 );
         }
     }
@@ -271,6 +275,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 
     public sealed class ManagedSystemModel
     {
+        // v3.0
         public int ManagedSystemID { get; set; }
         public int WorkgroupID { get; set; }
         public int EntityTypeID { get; set; }
@@ -321,6 +326,13 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         public int ChangeFrequencyDays { get; set; }
         public string ChangeTime { get; set; }
 
+        // v3.1
+        public string RemoteClientType { get; set; }
+
+        // v3.2
+        public int? ApplicationHostID { get; set; }
+        public bool IsApplicationHost { get; set; }
+
         public override string ToString()
         {
             return 
@@ -363,6 +375,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + $"ChangeFrequencyType: {ChangeFrequencyType}{Environment.NewLine}"
                 + $"ChangeFrequencyDays: {ChangeFrequencyDays}{Environment.NewLine}"
                 + $"ChangeTime: {ChangeTime}{Environment.NewLine}"
+                + $"RemoteClientType: {RemoteClientType}{Environment.NewLine}"
+                + $"ApplicationHostID: {ApplicationHostID}{Environment.NewLine}"
+                + $"IsApplicationHost: {IsApplicationHost}{Environment.NewLine}"
                 ;
         }
     }
@@ -520,8 +535,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
     public sealed class RequestSetPostModel
     {
         public List<string> AccessTypes { get; set; } = new List<string>();
-        public int AccountId { get; set; }
-        public int SystemId { get; set; }
+        public int AccountID { get; set; }
+        public int SystemID { get; set; }
+        public int? ApplicationID { get; set; }
         public int DurationMinutes { get; set; }
         public string Reason { get; set; }
         //public int? AccessPolicyScheduleID { get; set; }
@@ -534,14 +550,15 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                   "Access Types: {1}{0}"
                 + "Account ID: {2}{0}"
                 + "System ID: {3}{0}"
-                + "Duration: {4}{0}"
-                + "Reason: {5}{0}"
-                //+ "AccessPolicyScheduleID: {6}{0}"
-                + "TicketSystemID: {6}{0}"
-                + "TicketNumber: {7}{0}"
+                + "Application ID: {4}{0}"
+                + "Duration: {5}{0}"
+                + "Reason: {6}{0}"
+                //+ "AccessPolicyScheduleID: {7}{0}"
+                + "TicketSystemID: {7}{0}"
+                + "TicketNumber: {8}{0}"
                 , Environment.NewLine
                 , string.Join(",", AccessTypes)
-                , AccountId, SystemId, DurationMinutes, Reason
+                , AccountID, SystemID, ApplicationID, DurationMinutes, Reason
                 //, !AccessPolicyScheduleID.HasValue ? "(not given)" : Convert.ToString(AccessPolicyScheduleID.Value)
                 , TicketSystemID, TicketNumber
                 );
@@ -575,6 +592,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         public string SessionType { get; set; }
         public int AccountID { get; set; }
         public int SystemID { get; set; }
+        public int? ApplicationID { get; set; }
         public int? DurationMinutes { get; set; }
         public string Reason { get; set; }
 
@@ -584,10 +602,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                   "Session Type: {1}{0}"
                 + "Account ID: {2}{0}"
                 + "System ID: {3}{0}"
-                + "Duration: {4}{0}"
-                + "Reason: {5}{0}"
+                + "Application ID: {4}{0}"
+                + "Duration: {5}{0}"
+                + "Reason: {6}{0}"
                 , Environment.NewLine
-                , SessionType, AccountID, SystemID
+                , SessionType, AccountID, SystemID, ApplicationID
                 , !DurationMinutes.HasValue ? "(not given)" : Convert.ToString(DurationMinutes.Value)
                 , Reason
                 );
@@ -865,16 +884,21 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
     public sealed class AccessPolicyScheduleModel
     {
         public int ScheduleID { get; set; }
+        public bool RequireReason { get; set; }
+        public bool RequireTicketSystem { get; set; }
+        public short? TicketSystemID { get; set; }
+
         public List<AccessPolicyAccessTypesModel> AccessTypes { get; set; } = new List<AccessPolicyAccessTypesModel>();
 
         public override string ToString()
         {
-            return string.Format(
-                  "ScheduleID: {1}{0}"
-                + "AccessTypes count: {2}{0}"
-                , Environment.NewLine
-                , ScheduleID, AccessTypes.Count
-                );
+            return
+                  $"ScheduleID: {ScheduleID}{Environment.NewLine}"
+                + $"RequireReason: {RequireReason}{Environment.NewLine}"
+                + $"RequireTicketSystem: {RequireTicketSystem}{Environment.NewLine}"
+                + $"TicketSystemID: {TicketSystemID}{Environment.NewLine}"
+                + $"AccessTypes count: {AccessTypes.Count}{Environment.NewLine}"
+                ;
         }
     }
 
@@ -1321,6 +1345,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         public bool SupportsElevationFlag { get; set; }
         public bool LoginAccountFlag { get; set; }
 
+        public bool ApplicationHostFlag { get; set; }
+        public bool RequiresApplicationHost { get; set; }
+
         public override string ToString()
         {
             return string.Format(
@@ -1336,10 +1363,13 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + "DSSFlag: {10}{0}"
                 + "SupportsElevationFlag: {11}{0}"
                 + "LoginAccountFlag: {12}{0}"
+                + "ApplicationHostFlag: {13}{0}"
+                + "RequiresApplicationHost: {14}{0}"
                 , Environment.NewLine
                 , PlatformID, Name, ShortName
                 , PortFlag, DefaultPort, DefaultSessionType
                 , DomainNameFlag, AutoManagementFlag, ManageableFlag, DSSFlag, SupportsElevationFlag, LoginAccountFlag
+                , ApplicationHostFlag, RequiresApplicationHost
                 );
         }
     }
@@ -1628,7 +1658,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 
         public override string ToString()
         {
-            return 
+            return
                   $"SmartRuleID: {SmartRuleID}{Environment.NewLine}"
                 + $"OrganizationID: {OrganizationID}{Environment.NewLine}"
                 + $"Title: {Title}{Environment.NewLine}"
@@ -1639,6 +1669,17 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + $"IsReadOnly: {IsReadOnly}{Environment.NewLine}"
                 + $"RuleType: {RuleType}{Environment.NewLine}"
                 ;
+        }
+    }
+
+    public sealed class SmartRuleWithAccessLevelModel : SmartRuleModel
+    {
+        public int AccessLevelID { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString()
+                + $"AccessLevelID: {AccessLevelID}{Environment.NewLine}";
         }
     }
 
@@ -1754,18 +1795,15 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 
         public override string ToString()
         {
-            return string.Format(
-                  "GroupType: {1}{0}"
-                + "GroupID: {2}{0}"
-                + "Name: {3}{0}"
-                + "DistinguishedName: {4}{0}"
-                + "AccountAttribute: {5}{0}"
-                + "MembershipAttribute: {6}{0}"
-                , Environment.NewLine
-                , GroupType, GroupID, Name
-                , DistinguishedName
-                , AccountAttribute, MembershipAttribute
-                );
+            return 
+                  $"GroupType: {GroupType}{Environment.NewLine}"
+                + $"GroupID: {GroupID}{Environment.NewLine}"
+                + $"Name: {Name}{Environment.NewLine}"
+                + $"Description: {Description}{Environment.NewLine}"
+                + $"DistinguishedName: {DistinguishedName}{Environment.NewLine}"
+                + $"AccountAttribute: {AccountAttribute}{Environment.NewLine}"
+                + $"MembershipAttribute: {MembershipAttribute}{Environment.NewLine}"
+                ;
         }
     }
 
@@ -2003,83 +2041,6 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         }
     }
 
-    public sealed class VulnerabilitiesModel
-    {
-        public string VulnerabilityID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Severity { get; set; }
-        public string Solution { get; set; }
-        public decimal BaseScore { get; set; }
-        public string BaseVector { get; set; }
-        public DateTime LastDiscoveryDate { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public int? Port { get; set; }
-        public string Protocol { get; set; }
-        public bool IsExploitable { get; set; }
-        public bool IsVulnerable { get; set; }
-        public decimal? TemporalScore { get; set; }
-        public string TemporalVector { get; set; }
-        public List<VulnerabilityEventModel> Events { get; set; } = new List<VulnerabilityEventModel>();
-        public List<VulnerabilityReferenceModel> References { get; set; } = new List<VulnerabilityReferenceModel>();
-
-        public override string ToString()
-        {
-            return $"VulnerabilityID: {VulnerabilityID}{Environment.NewLine}"
-                + $"Name: {Name}{Environment.NewLine}"
-                + $"Description: {Description}{Environment.NewLine}"
-                + $"Severity: {Severity}{Environment.NewLine}"
-                + $"Solution: {Solution}{Environment.NewLine}"
-                + $"BaseScore: {BaseScore}{Environment.NewLine}"
-                + $"BaseVector: {BaseVector}{Environment.NewLine}"
-                + $"LastDiscoveryDate: {LastDiscoveryDate}{Environment.NewLine}"
-                + $"CreatedDate: {CreatedDate}{Environment.NewLine}"
-                + $"UpdatedDate: {UpdatedDate}{Environment.NewLine}"
-                + $"Port: {Port}{Environment.NewLine}"
-                + $"Protocol: {Protocol}{Environment.NewLine}"
-                + $"IsExploitable: {IsExploitable}{Environment.NewLine}"
-                + $"IsVulnerable: {IsVulnerable}{Environment.NewLine}"
-                + $"TemporalScore: {TemporalScore}{Environment.NewLine}"
-                + $"TemporalVector: {TemporalVector}{Environment.NewLine}"
-                + $"Events count: {Events.Count}{Environment.NewLine}"
-                + $"References count: {References.Count}{Environment.NewLine}"
-                ;
-        }
-    }
-
-    public sealed class VulnerabilityEventModel
-    {
-        public string TestedValue { get; set; }
-        public string FoundValue { get; set; }
-        public string Context { get; set; }
-
-        public override string ToString()
-        {
-            return $"TestedValue: {TestedValue}{Environment.NewLine}"
-                + $"FoundValue: {FoundValue}{Environment.NewLine}"
-                + $"Context: {Context}{Environment.NewLine}"
-                ;
-        }
-    }
-
-    public sealed class VulnerabilityReferenceModel
-    {
-        public string ReferenceID { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string URL { get; set; }
-
-        public override string ToString()
-        {
-            return $"ReferenceID: {ReferenceID}{Environment.NewLine}"
-                + $"Name: {Name}{Environment.NewLine}"
-                + $"Type: {Type}{Environment.NewLine}"
-                + $"URL: {URL}{Environment.NewLine}"
-                ;
-        }
-    }
-
     public sealed class OperatingSystemModel
     {
         public int OperatingSystemID { get; set; }
@@ -2312,6 +2273,142 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
                 + $"Type: {Type}{Environment.NewLine}"
                 + $"Value: {Value}{Environment.NewLine}"
                 + $"LastUpdateDate: {LastUpdateDate}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public sealed class TeamPasswordsFolderPostModel
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Guid? ParentId { get; set; }
+        public int UserGroupId { get; set; }
+
+        public override string ToString()
+        {
+            return
+                  $"Name: {Name}{Environment.NewLine}"
+                + $"Description: {Description}{Environment.NewLine}"
+                + $"ParentId: {ParentId}{Environment.NewLine}"
+                + $"UserGroupId: {UserGroupId}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public sealed class TeamPasswordsFolderModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Guid? ParentId { get; set; }
+        public int UserGroupId { get; set; }
+
+        public override string ToString()
+        {
+            return
+                  $"Id: {Id}{Environment.NewLine}"
+                + $"Name: {Name}{Environment.NewLine}"
+                + $"Description: {Description}{Environment.NewLine}"
+                + $"ParentId: {ParentId}{Environment.NewLine}"
+                + $"UserGroupId: {UserGroupId}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public sealed class TeamPasswordsCredentialPostModel
+    {
+        // v3.0
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+
+        // v3.1
+        public int? OwnerId { get; set; }
+        public string OwnerType { get; set; }
+        public List<TeamPasswordsCredentialOwnerModel> Owners { get; set; } = new List<TeamPasswordsCredentialOwnerModel>();
+
+        public override string ToString()
+        {
+            return
+                  $"Title: {Title}{Environment.NewLine}"
+                + $"Description: {Description}{Environment.NewLine}"
+                + $"Username: {Username}{Environment.NewLine}"
+                + $"Password: {Password}{Environment.NewLine}"
+                + $"OwnerId: {OwnerId}{Environment.NewLine}"
+                + $"OwnerType: {OwnerType}{Environment.NewLine}"
+                + $"Owners: {string.Join(";", Owners.Select(o=>$"  {o}"))}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public class TeamPasswordsCredentialWithPasswordModel : TeamPasswordsCredentialModel
+    {
+        public string Password { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString()
+                + $"Password: {Password}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public class TeamPasswordsCredentialModel
+    {
+        // v3.0
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Username { get; set; }
+        public int OwnerId { get; set; }
+        public Guid FolderId { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime ModifiedOn { get; set; }
+        public string ModifiedBy { get; set; }
+        public string Owner { get; set; }
+        public string Folder { get; set; }
+        public string FolderPath { get; set; }
+
+        // v3.1
+        public string OwnerType { get; set; }
+        public List<TeamPasswordsCredentialOwnerModel> Owners { get; set; } = new List<TeamPasswordsCredentialOwnerModel>();
+
+        public override string ToString()
+        {
+            return
+                  $"Id: {Id}{Environment.NewLine}"
+                + $"Title: {Title}{Environment.NewLine}"
+                + $"Description: {Description}{Environment.NewLine}"
+                + $"Username: {Username}{Environment.NewLine}"
+                + $"OwnerId: {OwnerId}{Environment.NewLine}"
+                + $"FolderId: {FolderId}{Environment.NewLine}"
+                + $"CreatedOn: {CreatedOn}{Environment.NewLine}"
+                + $"CreatedBy: {CreatedBy}{Environment.NewLine}"
+                + $"ModifiedOn: {ModifiedOn}{Environment.NewLine}"
+                + $"ModifiedBy: {ModifiedBy}{Environment.NewLine}"
+                + $"Owner: {Owner}{Environment.NewLine}"
+                + $"Folder: {Folder}{Environment.NewLine}"
+                + $"FolderPath: {FolderPath}{Environment.NewLine}"
+                + $"OwnerType: {OwnerType}{Environment.NewLine}"
+                + $"Owners: {Environment.NewLine}{string.Join(";", Owners.Select(o => $"{o}"))}{Environment.NewLine}"
+                ;
+        }
+    }
+
+    public sealed class TeamPasswordsCredentialOwnerModel
+    {
+        public int OwnerId { get; set; }
+        public string Owner { get; set; }
+        public string Email { get; set; }
+        
+        public override string ToString()
+        {
+            return
+                  $"  OwnerId: {OwnerId}{Environment.NewLine}"
+                + $"  Owner: {Owner}{Environment.NewLine}"
+                + $"  Email: {Email}{Environment.NewLine}"
                 ;
         }
     }

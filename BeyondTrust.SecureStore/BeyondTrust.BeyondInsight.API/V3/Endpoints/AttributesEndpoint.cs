@@ -28,7 +28,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// Returns an Attribute definition by ID.
         /// <para>API: GET Attributes/{id}</para>
         /// </summary>
-        /// <param name="id">ID of the Asset</param>
+        /// <param name="id">ID of the Attribute</param>
         /// <returns></returns>
         public AttributeResult Get(int id)
         {
@@ -72,10 +72,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <para>API: GET Assets/{assetID}/Attributes</para>
         /// </summary>
         /// <param name="assetID">ID of the Asset</param>
-        /// <returns></returns>
         public AttributesResult GetAllByAsset(int assetID)
         {
-            HttpResponseMessage response = _conn.Get(string.Format("Assets/{0}/Attributes", assetID));
+            HttpResponseMessage response = _conn.Get($"Assets/{assetID}/Attributes");
             AttributesResult result = new AttributesResult(response);
             return result;
         }
@@ -84,11 +83,11 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// Assigns an Attribute to an Asset.
         /// <para>API: POST Assets/{assetID}/Attributes/{attributeID}</para>
         /// </summary>
-        /// <param name="assetID">ID of the Attribute Type</param>
-        /// <returns></returns>
-        public AttributeResult Post(int assetID, int attributeID)
+        /// <param name="assetID">ID of the Asset</param>
+        /// <param name="attributeID">ID of the Attribute</param>
+        public AttributeResult PostByAsset(int assetID, int attributeID)
         {
-            HttpResponseMessage response = _conn.Post(string.Format("Assets/{0}/Attributes/{1}", assetID, attributeID));
+            HttpResponseMessage response = _conn.Post($"Assets/{assetID}/Attributes/{attributeID}");
             AttributeResult result = new AttributeResult(response);
             return result;
         }
@@ -98,10 +97,9 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <para>API: DELETE Assets/{id}/Attributes</para>
         /// </summary>
         /// <param name="assetID">ID of the Asset</param>
-        /// <returns></returns>
-        public DeleteResult DeleteAll(int assetID)
+        public DeleteResult DeleteAllByAsset(int assetID)
         {
-            HttpResponseMessage response = _conn.Delete(string.Format("Assets/{0}/Attributes", assetID));
+            HttpResponseMessage response = _conn.Delete($"Assets/{assetID}/Attributes");
             DeleteResult result = new DeleteResult(response);
             return result;
         }
@@ -112,10 +110,118 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// </summary>
         /// <param name="assetID">ID of the Asset</param>
         /// <param name="attributeID">ID of the Attribute</param>
-        /// <returns></returns>
-        public DeleteResult Delete(int assetID, int attributeID)
+        public DeleteResult DeleteByAsset(int assetID, int attributeID)
         {
-            HttpResponseMessage response = _conn.Delete(string.Format("Assets/{0}/Attributes/{1}", assetID, attributeID));
+            HttpResponseMessage response = _conn.Delete($"Assets/{assetID}/Attributes/{attributeID}");
+            DeleteResult result = new DeleteResult(response);
+            return result;
+        }
+
+        #endregion
+
+
+        #region Managed System Attributes
+
+        /// <summary>
+        /// Returns a list of Attributes by Managed System ID.
+        /// <para>API: GET ManagedSystems/{managedSystemID}/Attributes</para>
+        /// </summary>
+        /// <param name="managedSystemID">ID of the Managed System</param>
+        public AttributesResult GetAllByManagedSystem(int managedSystemID)
+        {
+            HttpResponseMessage response = _conn.Get($"ManagedSystems/{managedSystemID}/Attributes");
+            AttributesResult result = new AttributesResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Assigns an Attribute to a Managed System.
+        /// <para>API: POST ManagedSystems/{managedSystemID}/Attributes/{attributeID}</para>
+        /// </summary>
+        /// <param name="managedSystemID">ID of the Managed System</param>
+        /// <param name="attributeID">ID of the Attribute</param>
+        public AttributeResult PostByManagedSystem(int managedSystemID, int attributeID)
+        {
+            HttpResponseMessage response = _conn.Post($"ManagedSystems/{managedSystemID}/Attributes/{attributeID}");
+            AttributeResult result = new AttributeResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes all Managed System Attributes by Managed System ID.
+        /// <para>API: DELETE ManagedSystems/{id}/Attributes</para>
+        /// </summary>
+        /// <param name="managedSystemID">ID of the Managed System</param>
+        public DeleteResult DeleteAllByManagedSystem(int managedSystemID)
+        {
+            HttpResponseMessage response = _conn.Delete($"ManagedSystems/{managedSystemID}/Attributes");
+            DeleteResult result = new DeleteResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes a Managed System Attribute by Managed System ID and Attribute ID.
+        /// <para>API: DELETE ManagedSystems/{managedSystemID}/Attributes/{attributeID}</para>
+        /// </summary>
+        /// <param name="managedSystemID">ID of the Managed System</param>
+        /// <param name="attributeID">ID of the Attribute</param>
+        public DeleteResult DeleteByManagedSystem(int managedSystemID, int attributeID)
+        {
+            HttpResponseMessage response = _conn.Delete($"ManagedSystems/{managedSystemID}/Attributes/{attributeID}");
+            DeleteResult result = new DeleteResult(response);
+            return result;
+        }
+
+        #endregion
+
+        #region Managed Account Attributes
+
+        /// <summary>
+        /// Returns a list of Attributes by Managed Account ID.
+        /// <para>API: GET ManagedAccounts/{managedAccountID}/Attributes</para>
+        /// </summary>
+        /// <param name="managedAccountID">ID of the Managed Account</param>
+        public AttributesResult GetAllByManagedAccount(int managedAccountID)
+        {
+            HttpResponseMessage response = _conn.Get($"ManagedAccounts/{managedAccountID}/Attributes");
+            AttributesResult result = new AttributesResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Assigns an Attribute to a Managed Account.
+        /// <para>API: POST ManagedAccounts/{managedAccountID}/Attributes/{attributeID}</para>
+        /// </summary>
+        /// <param name="managedAccountID">ID of the Managed Account</param>
+        /// <param name="attributeID">ID of the Attribute</param>
+        public AttributeResult PostByManagedAccount(int managedAccountID, int attributeID)
+        {
+            HttpResponseMessage response = _conn.Post($"ManagedAccounts/{managedAccountID}/Attributes/{attributeID}");
+            AttributeResult result = new AttributeResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes all Managed Account Attributes by Managed Account ID.
+        /// <para>API: DELETE ManagedAccounts/{id}/Attributes</para>
+        /// </summary>
+        /// <param name="managedAccountID">ID of the Managed Account</param>
+        public DeleteResult DeleteAllByManagedAccount(int managedAccountID)
+        {
+            HttpResponseMessage response = _conn.Delete($"ManagedAccounts/{managedAccountID}/Attributes");
+            DeleteResult result = new DeleteResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes a Managed Account Attribute by Managed Account ID and Attribute ID.
+        /// <para>API: DELETE ManagedAccounts/{managedAccountID}/Attributes/{attributeID}</para>
+        /// </summary>
+        /// <param name="managedAccountID">ID of the Managed Account</param>
+        /// <param name="attributeID">ID of the Attribute</param>
+        public DeleteResult DeleteByManagedAccount(int managedAccountID, int attributeID)
+        {
+            HttpResponseMessage response = _conn.Delete($"ManagedAccounts/{managedAccountID}/Attributes/{attributeID}");
             DeleteResult result = new DeleteResult(response);
             return result;
         }

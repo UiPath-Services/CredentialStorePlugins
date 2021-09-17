@@ -15,17 +15,17 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <summary>
         /// List of Smart Rule query 'type' parameter values.
         /// </summary>
-        public readonly IReadOnlyList<string> Types = new List<string>() { "Asset", "ManagedSystem", "ManagedAccount", "Vulnerabilities" };
+        public readonly IReadOnlyList<string> Types = new List<string>() { "Asset", "ManagedSystem", "ManagedAccount" };
 
         /// <summary>
         /// Returns a list of Smart Rules to which the current user has at least Read access.
         /// <para>API: GET SmartRules</para>
         /// </summary>
-        /// <param name="type">The type of Smart Rules to return (all, ManagedAccount, Asset, Vulnerabilities)</param>
+        /// <param name="type">The type of Smart Rules to return (all, ManagedAccount, ManagedSystem, Asset)</param>
         /// <returns></returns>
         public SmartRulesResult GetAll(string type = "all")
         {
-            HttpResponseMessage response = _conn.Get($"SmartRules?type={type}");
+            HttpResponseMessage response = _conn.Get($"SmartRules/?type={type}");
             SmartRulesResult result = new SmartRulesResult(response);
             return result;
         }
@@ -58,15 +58,6 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         }
 
         /// <summary>
-        /// Returns a list of Vulnerability-based Smart Rules to which the current user has at least Read access.
-        /// </summary>
-        /// <returns></returns>
-        public SmartRulesResult GetVulnerabilitySmartRules()
-        {
-            return GetAll("Vulnerabilities");
-        }
-
-        /// <summary>
         /// Returns a Smart Rule by ID.
         /// <para>API: GET SmartRules/{id}</para>
         /// </summary>
@@ -88,7 +79,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <returns></returns>
         public SmartRuleResult Get(string title)
         {
-            HttpResponseMessage response = _conn.Get($"SmartRules?title={title}");
+            HttpResponseMessage response = _conn.Get($"SmartRules/?title={title}");
             SmartRuleResult result = new SmartRuleResult(response);
             return result;
         }
@@ -103,7 +94,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <returns></returns>
         public SmartRuleResult Get(string orgID, string title)
         {
-            HttpResponseMessage response = _conn.Get($"Organizations/{orgID}/SmartRules?title={title}");
+            HttpResponseMessage response = _conn.Get($"Organizations/{orgID}/SmartRules/?title={title}");
             SmartRuleResult result = new SmartRuleResult(response);
             return result;
         }
@@ -130,7 +121,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <returns></returns>
         public DeleteResult Delete(string title)
         {
-            HttpResponseMessage response = _conn.Delete($"SmartRules?title={title}");
+            HttpResponseMessage response = _conn.Delete($"SmartRules/?title={title}");
             DeleteResult result = new DeleteResult(response);
             return result;
         }
@@ -145,7 +136,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
         /// <returns></returns>
         public DeleteResult Delete(string orgID, string title)
         {
-            HttpResponseMessage response = _conn.Delete($"Organizations/{orgID}/SmartRules?title={title}");
+            HttpResponseMessage response = _conn.Delete($"Organizations/{orgID}/SmartRules/?title={title}");
             DeleteResult result = new DeleteResult(response);
             return result;
         }
@@ -180,6 +171,23 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 
             HttpResponseMessage response = _conn.Post("SmartRules/FilterAssetAttribute", model);
             SmartRuleResult result = new SmartRuleResult(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a list of Smart Rules to which the current User Group has at least Read access.
+        /// <para>API: GET UserGroups/{id}/SmartRules</para>
+        /// </summary>
+        /// <param name="id">ID of the Smart Rule</param>
+        /// <param name=accessLevel">UserGroup SmartRule Access Level - A single value or comma-delimited list of values: 0 - None, 1 - Read, 3 - Read/Write</param>
+        public SmartRulesWithAccessLevelResult GetByUserGroup(int id, string accessLevel = null)
+        {
+            string queryParams = QueryParameterBuilder.Build(
+                  new QueryParameter("accessLevel", accessLevel)
+                );
+
+            HttpResponseMessage response = _conn.Get($"UserGroups/{id}/SmartRules/{queryParams}");
+            SmartRulesWithAccessLevelResult result = new SmartRulesWithAccessLevelResult(response);
             return result;
         }
 

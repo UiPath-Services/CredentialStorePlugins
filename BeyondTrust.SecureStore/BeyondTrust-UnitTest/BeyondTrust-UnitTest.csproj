@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly.csproj" />
     <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly.csproj" />
+    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly.csproj" />
+    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-TeamPasswords-ReadOnly\UiPath.Orchestrator.BeyondTrust-TeamPasswords-ReadOnly.csproj" />
   </ItemGroup>
 </Project>

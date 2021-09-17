@@ -12,7 +12,7 @@ namespace UiPath.Orchestrator.BeyondTrust
 
         public void SignIn()
         {
-            var signInResult = Auth.SignAppIn(config["AuthKey"].ToString(), config["RunAs"].ToString(), !(bool)config["SSLEnabled"]);
+            var signInResult = Auth.SignAppIn(config["AuthKey"].ToString(), config["RunAs"].ToString());
             if (!signInResult.IsSuccess)
             {
                 throw new SecureStoreException(SecureStoreException.Type.UnauthorizedOperation, "Authentication error");

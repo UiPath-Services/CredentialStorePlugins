@@ -260,7 +260,7 @@ FakesAssemblies/
 *.plg
 
 # Visual Studio 6 workspace options file
-.env
+
 .DS_Store
 OneIdentitySafeguard.SecureStore/OneIdentitySafeguard.SecureStore.sln
 OneIdentitySafeguard.SecureStore/OneIdentitySafeguard.SecureStore.Tests/app.config

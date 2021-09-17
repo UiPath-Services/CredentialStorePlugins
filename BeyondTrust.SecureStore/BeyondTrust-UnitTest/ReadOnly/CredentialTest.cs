@@ -1,3 +1,4 @@
+using dotenv.net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -15,13 +16,22 @@ namespace BeyondTrust_UnitTest.ReadOnly
         private readonly BeyondTrustSingleSystemSecureStore singleSystemSecureStore = new();
         private readonly BeyondTrustDynamicSystemSecureStore dynamicSystemSecureStore = new();
         private readonly BeyondTrustTeamPasswordsSecureStore teamPasswordSecureStore = new();
-        private readonly Dictionary<string, object> config = new()
+        private static Dictionary<string, object> config;
+        private static IDictionary<string, string> envVars;
+
+        [ClassInitialize]
+        public static void Init(TestContext _)
         {
-            { "Hostname", "https://ritjnmzm.ps.beyondtrustcloud.com" },
-            { "AuthKey", "b6cd8ea8afe98e6fde1200780dc465a325ef015751414a37d71b27123e4bbd9c7c43cde389be1c3d82c8b8ec24753099b81623e2c121a8059edc01028591006e" },
-            { "RunAs", "uipath" },
-            { "SSLEnabled", false },
-        };
+            DotEnv.Load();
+            envVars = DotEnv.Read();
+            config = new()
+            {
+                { "Hostname", envVars["HOSTNAME"] },
+                { "AuthKey", envVars["AUTH_KEY"] },
+                { "RunAs", envVars["RUN_AS"] },
+                { "SSLEnabled", false },
+            };
+        }
 
         // ------------- SINGLE SYSTEM -------------
         [TestMethod]
@@ -29,7 +39,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "btlab.btu.cloud");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "system");
             }
             catch (Exception)
@@ -37,7 +47,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, "botuser01");
+            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, envVars["SYSTEM_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.AreEqual(credential.Username, "");
@@ -58,7 +68,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "btlab.btu.cloud");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "system");
             }
             catch (Exception)
@@ -66,7 +76,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var value = await singleSystemSecureStore.GetValueAsync(context, "botuser01");
+            var value = await singleSystemSecureStore.GetValueAsync(context, envVars["SYSTEM_MANAGED_ACCOUNT"]);
             Assert.AreEqual(value, "");
         }
 
@@ -75,7 +85,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "btlab.btu.cloud");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "domainlinked");
             }
             catch (Exception)
@@ -83,7 +93,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, "botuser01");
+            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, envVars["AD_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.IsNotNull(credential.Username);
@@ -104,7 +114,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, "btlab.btu.cloud/botuser01");
+            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["SYSTEM_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.AreEqual(credential.Username, "");
@@ -133,7 +143,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var value = await dynamicSystemSecureStore.GetValueAsync(context, "btlab.btu.cloud/botuser01");
+            var value = await dynamicSystemSecureStore.GetValueAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["SYSTEM_MANAGED_ACCOUNT"]);
             Assert.AreEqual(value, "");
         }
 
@@ -150,7 +160,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, "btlab.btu.cloud/botuser01");
+            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["AD_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.IsNotNull(credential.Username);
@@ -170,7 +180,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await teamPasswordSecureStore.GetCredentialsAsync(context, "UiPath/TestCredential");
+            var credential = await teamPasswordSecureStore.GetCredentialsAsync(context, envVars["TEAM_PASSWORDS_FOLDER"] + "/" + envVars["TEAM_PASSWORD_TITLE"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.AreEqual("testuser", credential.Username);

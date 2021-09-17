@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>UiPath.Orchestrator.BeyondTrust_ReadOnly</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="UiPath.Orchestrator.Extensibility" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.4" />
+  </ItemGroup>
+</Project>

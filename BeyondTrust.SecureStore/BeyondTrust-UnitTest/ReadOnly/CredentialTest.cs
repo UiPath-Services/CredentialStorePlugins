@@ -33,6 +33,21 @@ namespace BeyondTrust_UnitTest.ReadOnly
             };
         }
 
+        // ------------- CONNECTION -------------
+        [TestMethod]
+        public async Task TestConnection()
+        {
+            var context = JsonConvert.SerializeObject(config);
+            try
+            {
+                await teamPasswordSecureStore.ValidateContextAsync(context);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Expected no exception, but got: " + ex.Message);
+            }
+        }
+
         // ------------- SINGLE SYSTEM -------------
         [TestMethod]
         public async Task GetSingleSystemCredential()

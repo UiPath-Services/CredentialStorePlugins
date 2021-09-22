@@ -8,7 +8,7 @@ namespace UiPath.Orchestrator.BeyondTrust
     {
         private readonly Dictionary<string, object> config;
 
-        public BeyondTrustVaultClient(Dictionary<string, object> config) : base(config["Hostname"].ToString() + "/BeyondTrust/api/public/v3/") => this.config = config;
+        public BeyondTrustVaultClient(Dictionary<string, object> config) : base(config["Hostname"].ToString() + "/BeyondTrust/api/public/v3/", bool.Parse(config["SSLEnabled"].ToString())) => this.config = config;
 
         public void SignIn()
         {

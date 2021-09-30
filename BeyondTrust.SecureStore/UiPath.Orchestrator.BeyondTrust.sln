@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeyondTrust-UnitTest", "Bey
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.BeyondInsight.API", "BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj", "{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust.csproj", "{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj", "{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

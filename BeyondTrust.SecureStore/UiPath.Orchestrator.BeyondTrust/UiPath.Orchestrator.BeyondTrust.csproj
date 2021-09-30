@@ -6,12 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="UiPath.Orchestrator.Extensibility" />
+    <None Remove="lib\" />
+    <None Remove="UiPath.BeyondInsight.API" />
+    <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UiPath.BeyondInsight.API">
+      <HintPath>lib\UiPath.BeyondInsight.API.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

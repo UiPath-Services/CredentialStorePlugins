@@ -15,15 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="dotenv.net" />
     <None Remove=".env" />
+    <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj" />
   </ItemGroup>
 </Project>

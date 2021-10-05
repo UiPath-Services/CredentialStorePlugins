@@ -54,6 +54,7 @@ namespace UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly
                 {
                     Key = "FolderPasswordDelimiter",
                     DisplayName = "Folder / Account delimiter",
+                    DefaultValue = "/",
                     IsMandatory = true,
                 },
             };

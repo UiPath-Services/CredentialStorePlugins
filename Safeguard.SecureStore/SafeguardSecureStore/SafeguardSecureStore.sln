@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31613.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UiPath.Orchestrator.SafeguardSecureStore", "UiPath.Orchestrator.SafeguardSecureStore.csproj", "{69102301-6B8E-4AFE-A606-24756D7D4EEC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UiPath.Orchestrator.SafeguardSecureStoreTests", "..\SafeguardSecureStoreTests\UiPath.Orchestrator.SafeguardSecureStoreTests.csproj", "{018872A3-E0FB-42CB-8B06-7AFB1C36046C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69102301-6B8E-4AFE-A606-24756D7D4EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69102301-6B8E-4AFE-A606-24756D7D4EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69102301-6B8E-4AFE-A606-24756D7D4EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69102301-6B8E-4AFE-A606-24756D7D4EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{018872A3-E0FB-42CB-8B06-7AFB1C36046C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{018872A3-E0FB-42CB-8B06-7AFB1C36046C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{018872A3-E0FB-42CB-8B06-7AFB1C36046C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{018872A3-E0FB-42CB-8B06-7AFB1C36046C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C5A7B4A-AB50-4293-AD45-454D1B12CA6D}
+	EndGlobalSection
+EndGlobal

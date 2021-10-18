@@ -1,30 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using UiPath.Orchestrator.Extensibility.SecureStores;
-using UiPath.Orchestrator.Extensibility.Configuration;
-using System.Security;
-using OneIdentity.SafeguardDotNet.A2A;
-using OneIdentity.SafeguardDotNet;
 using System.Net;
+using System.Security;
+using System.Threading.Tasks;
+using UiPath.Orchestrator.Extensibility.Configuration;
+using UiPath.Orchestrator.Extensibility.SecureStores;
 using UiPath.Orchestrator.SafeguardSecureStore;
 
 namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 {
     public class SafeguardSecureStore : ISecureStore
     {
-        private const string NameIdentifier = "Safeguard";
-
-        
-
         public SecureStoreInfo GetStoreInfo() =>
-            new SecureStoreInfo { Identifier = NameIdentifier, IsReadOnly = true };
+            new SecureStoreInfo { Identifier = "One Identity Safeguard", IsReadOnly = true };
 
-        // Configuration APIs
+
         public void Initialize(Dictionary<string, string> hostSettings)
         {
             //Safeguard does not use host level configuration
-            //https://github.com/UiPath/Orchestrator-CredentialStorePlugins#initialization-and-configuration
         }
 
         public IEnumerable<ConfigurationEntry> GetConfiguration()
@@ -34,14 +27,20 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 new ConfigurationValue(ConfigurationValueType.String)
                 {
                     Key = "SafeguardAppliance",
-                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingSafeguardAppliance)),                    
-                    IsMandatory = true
+                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingSafeguardAppliance)),
+                    IsMandatory = true,
                 },
                 new ConfigurationValue(ConfigurationValueType.Secret)
                 {
                     Key = "SafeguardCertThumbprint",
                     DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingSafeguardCertificateThumprint)),
-                    IsMandatory = true
+                    IsMandatory = true,
+                },
+                new ConfigurationValue(ConfigurationValueType.Boolean)
+                {
+                    Key = "IgnoreSSL",
+                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingIgnoreSSL)),
+                    IsMandatory = true,
                 }
             };
 
@@ -49,18 +48,11 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
         public Task ValidateContextAsync(string context)
         {
-            //The parameter context from all methods on the interface is a json-serialized representation of the instance-level configuration that is defined by the method GetConfiguration.
-            //ImplementConfigValidationMethod(context);
-
             try
             {
                 var ctx = ConvertJsonToContext(context);
-
-                if (!string.IsNullOrWhiteSpace(ctx.SafeguardAppliance) &&
-                    !string.IsNullOrWhiteSpace(ctx.SafeguardCertThumbprint))
-                {
-                    return Task.CompletedTask;
-                }
+                SafeguardClientFactory.Instance.GetClient(ctx).TestConnection();
+                return Task.CompletedTask;
             }
             catch (Exception)
             {
@@ -68,8 +60,6 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 SecureStoreException.Type.InvalidConfiguration,
                 SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardJsonInvalidOrMissing), context));
             }
-
-            return Task.CompletedTask;
         }
 
         // Robots credential APIs
@@ -82,23 +72,23 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             switch (safeguardKey["SafeguardA2AMethod"])
             {
                 case "a2akey":
-                    return GetCredential_A2A_APIKey(ctx.SafeguardAppliance, ctx.SafeguardCertThumbprint, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword).Password;
+                    return GetCredential_A2A_APIKey(ctx, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword).Password;
                 case "account_lookup":
-                    return GetCredential_A2A_Account(ctx.SafeguardAppliance, ctx.SafeguardCertThumbprint, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password;
+                    return GetCredential_A2A_Account(ctx, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password;
                 default:
                     throw new SecureStoreException(
                         SecureStoreException.Type.SecretNotFound,
                         "Unknown SafeguardA2AMethod");
             }
-            
+
         }
 
         public Task<string> CreateValueAsync(string context, string key, string value) =>
             throw new SecureStoreException(
                 SecureStoreException.Type.UnsupportedOperation,
                 SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardReadOnly)));
-        
-        
+
+
 
         public Task<string> UpdateValueAsync(string context, string key, string oldAugumentedKey, string value) =>
             throw new SecureStoreException(
@@ -111,12 +101,9 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         {
             //key (Asset Name) should be in format user@target or a2akey:<key> is given in external_name
 
-            var ctx = new SafeguardContext();
-
+            var ctx = ConvertJsonToContext(context);
             try
             {
-                ctx = ConvertJsonToContext(context);
-
                 if (string.IsNullOrWhiteSpace(ctx.SafeguardAppliance) ||
                     string.IsNullOrWhiteSpace(ctx.SafeguardCertThumbprint))
                 {
@@ -133,16 +120,16 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             }
 
             var safeguardKey = SafeguardUtils.ExtractKey(key);
-            
+
             switch (safeguardKey["SafeguardA2AMethod"])
             {
                 case "a2akey":
-                    return GetCredential_A2A_APIKey(ctx.SafeguardAppliance, ctx.SafeguardCertThumbprint, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword, true);
+                    return GetCredential_A2A_APIKey(ctx, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword, true);
                 case "account_lookup":
                     return new Credential
                     {
                         Username = safeguardKey["SafeguardAccount"],
-                        Password = GetCredential_A2A_Account(ctx.SafeguardAppliance, ctx.SafeguardCertThumbprint, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password,
+                        Password = GetCredential_A2A_Account(ctx, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password,
                     };
                 default:
                     throw new SecureStoreException(
@@ -173,16 +160,12 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
         }
 
-        //move A2A get context to Client.cs file
-        private static ISafeguardA2AContext _a2AContext;
-        private static IList<A2ARetrievableAccount> accounts;
-        public Credential GetCredential_A2A_Account(string appliance, string cert_thumprint, string targetaccount, string target, bool ignoreSsl = true, int apiVersion = 3)
+        public Credential GetCredential_A2A_Account(SafeguardContext context, string targetaccount, string target)
         {
 
-            SecureString api_key = new SecureString();
-
-            _a2AContext = OneIdentity.SafeguardDotNet.Safeguard.A2A.GetContext(appliance, cert_thumprint, apiVersion, ignoreSsl);
-            accounts = _a2AContext.GetRetrievableAccounts();
+            var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
+            var accounts = a2AContext.GetRetrievableAccounts();
+            var api_key = new SecureString();
 
             for (int i = 0; i < accounts.Count; i++)
             {
@@ -198,9 +181,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 }
             }
 
-            NetworkCredential retcred = new NetworkCredential("", _a2AContext.RetrievePassword(api_key));
-
-            _a2AContext.Dispose();
+            var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
 
             return new Credential
             {
@@ -209,14 +190,12 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             };
         }
 
-        public Credential GetCredential_A2A_APIKey(string appliance, string cert_thumprint, SecureString api_key, bool lookup_account = false, bool ignoreSsl = true, int apiVersion = 3)
+        public Credential GetCredential_A2A_APIKey(SafeguardContext context, SecureString api_key, bool lookup_account = false)
         {
-
-            _a2AContext = OneIdentity.SafeguardDotNet.Safeguard.A2A.GetContext(appliance, cert_thumprint, apiVersion, ignoreSsl);
+            var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
             if (lookup_account == false)
             {
-                NetworkCredential retcred = new NetworkCredential("", _a2AContext.RetrievePassword(api_key));
-                _a2AContext.Dispose();
+                var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
                 return new Credential
                 {
                     Username = string.Empty,
@@ -225,17 +204,16 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             }
             else
             {
-                accounts = _a2AContext.GetRetrievableAccounts();
-                Credential cred = new Credential();
+                var accounts = a2AContext.GetRetrievableAccounts();
+                var cred = new Credential();
                 for (int i = 0; i < accounts.Count; i++)
                 {
-                    if (new NetworkCredential("", accounts[i].ApiKey).Password == new NetworkCredential("",api_key).Password)
+                    if (new NetworkCredential("", accounts[i].ApiKey).Password == new NetworkCredential("", api_key).Password)
                     {
                         cred.Username = accounts[i].AccountName;
-                        cred.Password = new NetworkCredential("", _a2AContext.RetrievePassword(api_key)).Password;
+                        cred.Password = new NetworkCredential("", a2AContext.RetrievePassword(api_key)).Password;
                     }
                 }
-                _a2AContext.Dispose();
                 return cred;
             }
         }

@@ -48,7 +48,7 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
 
         /// <summary>
         /// Updates an existing Directory by ID.
-        /// <para>API: PUT Directories/{id</para>
+        /// <para>API: PUT Directories/{id}</para>
         /// </summary>
         /// <param name="id">ID of the Directory</param>
         /// <returns></returns>

@@ -679,6 +679,14 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
     }
 
     /// <summary>
+    /// Result of Get UserGroups/{id}SmartRules.
+    /// </summary>
+    public sealed class SmartRulesWithAccessLevelResult : APIResult<List<SmartRuleWithAccessLevelModel>>
+    {
+        internal SmartRulesWithAccessLevelResult(HttpResponseMessage r) : base(r) { }
+    }
+
+    /// <summary>
     /// Result of Get QuickRules.
     /// </summary>
     public sealed class QuickRulesResult : APIResult<List<QuickRuleModel>>
@@ -732,14 +740,6 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
     public sealed class UserResult : APIResult<UserModel>
     {
         internal UserResult(HttpResponseMessage r) : base(r) { }
-    }
-
-    /// <summary>
-    /// Result of Get Vulnerabilities.
-    /// </summary>
-    public sealed class VulnerabilitiesResult : APIResult<List<VulnerabilitiesModel>>
-    {
-        internal VulnerabilitiesResult(HttpResponseMessage r) : base(r) { }
     }
 
     /// <summary>
@@ -839,11 +839,51 @@ namespace BeyondTrust.BeyondInsight.PasswordSafe.API.Client.V3
     }
 
     /// <summary>
-    /// Result of Get Address
+    /// Result of Get Address.
     /// </summary>
     public sealed class AddressResult : APIResult<AddressModel>
     {
         internal AddressResult(HttpResponseMessage r) : base(r) { }
     }
 
+    /// <summary>
+    /// Result of Get Team Passwords Folders.
+    /// </summary>
+    public sealed class TeamPasswordsFoldersResult : APIResult<List<TeamPasswordsFolderModel>>
+    {
+        internal TeamPasswordsFoldersResult(HttpResponseMessage r) : base(r) { }
+    }
+
+    /// <summary>
+    /// Result of Get Team Passwords Folder.
+    /// </summary>
+    public sealed class TeamPasswordsFolderResult : APIResult<TeamPasswordsFolderModel>
+    {
+        internal TeamPasswordsFolderResult(HttpResponseMessage r) : base(r) { }
+    }
+
+    /// <summary>
+    /// Result of Get Team Passwords Credentials.
+    /// </summary>
+    public sealed class TeamPasswordsCredentialsResult : APIResult<List<TeamPasswordsCredentialModel>>
+    {
+        internal TeamPasswordsCredentialsResult(HttpResponseMessage r) : base(r) { }
+    }
+
+    /// <summary>
+    /// Result of Post/Put Team Passwords Credential.
+    /// </summary>
+    public sealed class TeamPasswordsCredentialResult : APIResult<TeamPasswordsCredentialModel>
+    {
+        internal TeamPasswordsCredentialResult(HttpResponseMessage r) : base(r) { }
+    }
+
+    /// <summary>
+    /// Result of Get Team Passwords Credential.
+    /// </summary>
+    public sealed class TeamPasswordsCredentialWithPasswordResult : APIResult<TeamPasswordsCredentialWithPasswordModel>
+    {
+        internal TeamPasswordsCredentialWithPasswordResult(HttpResponseMessage r) : base(r) { }
+    }
+    
 }

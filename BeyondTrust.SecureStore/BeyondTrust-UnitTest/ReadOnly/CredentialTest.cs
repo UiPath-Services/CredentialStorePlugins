@@ -1,3 +1,4 @@
+using dotenv.net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -5,21 +6,47 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UiPath.Orchestrator.BeyondTrustDynamicSystemReadOnly;
 using UiPath.Orchestrator.BeyondTrustSingleSystemReadOnly;
+using UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly;
 
 namespace BeyondTrust_UnitTest.ReadOnly
 {
     [TestClass]
     public class CredentialTest
     {
-        private readonly BeyondTrustSingleSystemSecureStore singleSystemSecureStore = new BeyondTrustSingleSystemSecureStore();
-        private readonly BeyondTrustDynamicSystemSecureStore dynamicSystemSecureStore = new BeyondTrustDynamicSystemSecureStore();
-        private readonly Dictionary<string, object> config = new Dictionary<string, object>
+        private readonly BeyondTrustSingleSystemSecureStore singleSystemSecureStore = new();
+        private readonly BeyondTrustDynamicSystemSecureStore dynamicSystemSecureStore = new();
+        private readonly BeyondTrustTeamPasswordsSecureStore teamPasswordSecureStore = new();
+        private static Dictionary<string, object> config;
+        private static IDictionary<string, string> envVars;
+
+        [ClassInitialize]
+        public static void Init(TestContext _)
+        {
+            DotEnv.Load();
+            envVars = DotEnv.Read();
+            config = new()
             {
-                { "Hostname", "" },
-                {"AuthKey", "" },
-                {"RunAs", "" },
-                {"SSLEnabled", false },
+                { "Hostname", envVars["HOSTNAME"] },
+                { "AuthKey", envVars["AUTH_KEY"] },
+                { "RunAs", envVars["RUN_AS"] },
+                { "SSLEnabled", false },
             };
+        }
+
+        // ------------- CONNECTION -------------
+        [TestMethod]
+        public async Task TestConnection()
+        {
+            var context = JsonConvert.SerializeObject(config);
+            try
+            {
+                await teamPasswordSecureStore.ValidateContextAsync(context);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Expected no exception, but got: " + ex.Message);
+            }
+        }
 
         // ------------- SINGLE SYSTEM -------------
         [TestMethod]
@@ -27,7 +54,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "system");
             }
             catch (Exception)
@@ -35,7 +62,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, "");
+            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, envVars["SYSTEM_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.AreEqual(credential.Username, "");
@@ -56,7 +83,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "system");
             }
             catch (Exception)
@@ -64,7 +91,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var value = await singleSystemSecureStore.GetValueAsync(context, "");
+            var value = await singleSystemSecureStore.GetValueAsync(context, envVars["SYSTEM_MANAGED_ACCOUNT"]);
             Assert.AreEqual(value, "");
         }
 
@@ -73,7 +100,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
         {
             try
             {
-                config.Add("ManagedSystemName", "");
+                config.Add("ManagedSystemName", envVars["MANAGED_SYSTEM"]);
                 config.Add("ManagedAccountType", "domainlinked");
             }
             catch (Exception)
@@ -81,7 +108,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, "");
+            var credential = await singleSystemSecureStore.GetCredentialsAsync(context, envVars["AD_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.IsNotNull(credential.Username);
@@ -102,7 +129,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, "");
+            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["SYSTEM_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.AreEqual(credential.Username, "");
@@ -131,7 +158,7 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var value = await dynamicSystemSecureStore.GetValueAsync(context, "");
+            var value = await dynamicSystemSecureStore.GetValueAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["SYSTEM_MANAGED_ACCOUNT"]);
             Assert.AreEqual(value, "");
         }
 
@@ -148,11 +175,31 @@ namespace BeyondTrust_UnitTest.ReadOnly
                 // Continue if keys already added
             }
             var context = JsonConvert.SerializeObject(config);
-            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, "");
+            var credential = await dynamicSystemSecureStore.GetCredentialsAsync(context, envVars["MANAGED_SYSTEM"] + "/" + envVars["AD_MANAGED_ACCOUNT"]);
 
             Console.WriteLine(credential.Username + "; " + credential.Password);
             Assert.IsNotNull(credential.Username);
             Assert.IsNotNull(credential.Password);
+        }
+
+        // ------------- TEAM PASSWORDS -------------
+        [TestMethod]
+        public async Task GetTeamPassword()
+        {
+            try
+            {
+                config.Add("FolderPasswordDelimiter", "/");
+            }
+            catch (Exception)
+            {
+                // Continue if keys already added
+            }
+            var context = JsonConvert.SerializeObject(config);
+            var credential = await teamPasswordSecureStore.GetCredentialsAsync(context, envVars["TEAM_PASSWORDS_FOLDER"] + "/" + envVars["TEAM_PASSWORD_TITLE"]);
+
+            Console.WriteLine(credential.Username + "; " + credential.Password);
+            Assert.AreEqual("testuser", credential.Username);
+            Assert.AreEqual("testpassword", credential.Password);
         }
     }
 }

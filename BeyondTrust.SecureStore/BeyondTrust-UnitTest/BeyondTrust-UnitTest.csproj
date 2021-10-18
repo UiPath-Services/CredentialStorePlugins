@@ -11,10 +11,20 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <PackageReference Include="dotenv.net" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly.csproj" />
-    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly.csproj" />
+    <None Remove="dotenv.net" />
+    <None Remove=".env" />
+    <None Remove="Newtonsoft.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".env">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj" />
   </ItemGroup>
 </Project>

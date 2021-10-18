@@ -8,11 +8,11 @@ namespace UiPath.Orchestrator.BeyondTrust
     {
         private readonly Dictionary<string, object> config;
 
-        public BeyondTrustVaultClient(Dictionary<string, object> config) : base(config["Hostname"].ToString() + "/BeyondTrust/api/public/v3/") => this.config = config;
+        public BeyondTrustVaultClient(Dictionary<string, object> config) : base(config["Hostname"].ToString() + "/BeyondTrust/api/public/v3/", bool.Parse(config["SSLEnabled"].ToString())) => this.config = config;
 
         public void SignIn()
         {
-            var signInResult = Auth.SignAppIn(config["AuthKey"].ToString(), config["RunAs"].ToString(), !(bool)config["SSLEnabled"]);
+            var signInResult = Auth.SignAppIn(config["AuthKey"].ToString(), config["RunAs"].ToString());
             if (!signInResult.IsSuccess)
             {
                 throw new SecureStoreException(SecureStoreException.Type.UnauthorizedOperation, "Authentication error");

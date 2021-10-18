@@ -15,8 +15,7 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
 
         private const string SafeguardAppliance = "";
         private const string SafeguardCertThumbprint = "";
-        private const string IgnoreSSL = "true";
-        private const string ContextSafeguard = "{\"SafeguardAppliance\": \"" + SafeguardAppliance + "\", \"SafeguardCertThumbprint\": \"" + SafeguardCertThumbprint + "\", \"IgnoreSSL\": " + IgnoreSSL + "}";
+        private const string ContextSafeguard = "{\"SafeguardAppliance\": \"" + SafeguardAppliance + "\", \"SafeguardCertThumbprint\": \"" + SafeguardCertThumbprint + "\"}";
         private const string KeyAsset = "";
         private const string KeyDomain = "";
         private const string KeyApiKey = "";
@@ -37,7 +36,7 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         {
             var expected = new SecureStoreInfo
             {
-                Identifier = "One Identity Safeguard",
+                Identifier = "Safeguard",
                 IsReadOnly = true,
             };
 
@@ -75,12 +74,6 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
                 {
                     Key = "SafeguardCertThumbprint",
                     DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingSafeguardCertificateThumprint)),
-                    IsMandatory = true
-                },
-                new ConfigurationValue(ConfigurationValueType.Boolean)
-                {
-                    Key = "IgnoreSSL",
-                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingIgnoreSSL)),
                     IsMandatory = true
                 },
             };

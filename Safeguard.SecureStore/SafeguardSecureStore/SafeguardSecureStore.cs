@@ -171,10 +171,10 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             {
                 if (
                     accounts[i].AccountName == targetaccount &&
-                    (accounts[i].AssetName == target
-                        || accounts[i].DomainName == target
-                        || accounts[i].DomainName.Split('.')[0] == target
-                        || accounts[i].AssetNetworkAddress == target)
+                    ((accounts[i].AssetName != null && accounts[i].AssetName == target)
+                        || (accounts[i].DomainName != null && accounts[i].DomainName == target)
+                        || (accounts[i].DomainName != null && accounts[i].DomainName.Split('.')[0] == target)
+                        || (accounts[i].AssetNetworkAddress != null && accounts[i].AssetNetworkAddress == target))
                     )
                 {
                     api_key = accounts[i].ApiKey;

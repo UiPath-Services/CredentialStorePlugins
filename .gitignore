@@ -259,6 +259,9 @@ FakesAssemblies/
 # Visual Studio 6 build log
 *.plg
 
+# Nuget config
+nuget.config
+
 # Visual Studio 6 workspace options file
 .env
 .DS_Store

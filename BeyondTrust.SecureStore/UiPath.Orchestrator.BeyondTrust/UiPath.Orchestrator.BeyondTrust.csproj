@@ -2,13 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RootNamespace>UiPath.Orchestrator.BeyondTrust_ReadOnly</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.2" />
+    <None Remove="UiPath.Orchestrator.Extensibility" />
+    <None Remove="UiPath.BeyondInsight.API" />
+    <None Remove="Newtonsoft.Json" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UiPath.BeyondInsight.API">
+      <HintPath>lib\UiPath.BeyondInsight.API.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj" />
   </ItemGroup>

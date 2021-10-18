@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj", "{2F9DAD4E-5E1C-4450-A610-8B5C486C0998}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeyondTrust-UnitTest", "BeyondTrust-UnitTest\BeyondTrust-UnitTest.csproj", "{5B260992-D116-4BB3-BE67-0871934D79B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.BeyondInsight.API", "BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj", "{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly", "UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-SingleSystem-ReadOnly.csproj", "{EE2699FA-4D75-4C78-85FB-8FF10CBDD646}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly", "UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly\UiPath.Orchestrator.BeyondTrust-DynamicSystem-ReadOnly.csproj", "{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj", "{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F9DAD4E-5E1C-4450-A610-8B5C486C0998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F9DAD4E-5E1C-4450-A610-8B5C486C0998}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F9DAD4E-5E1C-4450-A610-8B5C486C0998}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F9DAD4E-5E1C-4450-A610-8B5C486C0998}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5B260992-D116-4BB3-BE67-0871934D79B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B260992-D116-4BB3-BE67-0871934D79B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B260992-D116-4BB3-BE67-0871934D79B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,14 +23,10 @@ Global
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE2699FA-4D75-4C78-85FB-8FF10CBDD646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE2699FA-4D75-4C78-85FB-8FF10CBDD646}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE2699FA-4D75-4C78-85FB-8FF10CBDD646}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE2699FA-4D75-4C78-85FB-8FF10CBDD646}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58DE6F08-3EB1-4084-A4A3-C1B84A81058C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

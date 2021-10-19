@@ -8,7 +8,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
     public class SafeguardContextBuilder
     {
         private SafeguardContext _context;
-                
+
         public SafeguardContextBuilder FromJson(string json)
         {
             json = json ?? throw new SecureStoreException(
@@ -22,8 +22,8 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             catch (Exception)
             {
                 throw new Exception(
-                        SafeguardUtils.GetLocalizedResource(nameof(Resource.JsonDeserializationIssue), json, _context.SafeguardAppliance, _context.SafeguardCertThumbprint));
-                    
+                        SafeguardUtils.GetLocalizedResource(nameof(Resource.JsonDeserializationIssue), json, _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
+
             }
 
             _context = _context ?? throw new SecureStoreException(
@@ -33,7 +33,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             return this;
         }
 
-        
+
 
         public SafeguardContext Build()
         {
@@ -46,7 +46,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             {
                 throw new SecureStoreException(
                     SecureStoreException.Type.InvalidConfiguration,
-                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint));
+                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
 
             }
 
@@ -55,7 +55,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
                 throw new SecureStoreException(
                     SecureStoreException.Type.InvalidConfiguration,
-                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint));
+                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
 
             }
 

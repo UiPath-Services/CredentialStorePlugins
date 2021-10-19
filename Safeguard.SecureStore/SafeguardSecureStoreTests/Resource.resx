@@ -135,4 +135,10 @@
   <data name="SettingSafeguardCertificateThumprint" xml:space="preserve">
     <value>Certificate thumprint used to connect to Safeguard</value>
   </data>
+  <data name="SettingIgnoreSSL" xml:space="preserve">
+    <value>Ignore SSL</value>
+  </data>
+  <data name="SafeguardNoAccessToRetrievableCredentials" xml:space="preserve">
+    <value>A2A certificate user has no access to Credential Retrieval accounts or list is empty. Check the Safegaurd A2A configuration</value>
+  </data>
 </root>

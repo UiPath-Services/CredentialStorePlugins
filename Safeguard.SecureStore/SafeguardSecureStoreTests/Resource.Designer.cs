@@ -79,6 +79,15 @@ namespace UiPath.Orchestrator.SafeguardSecureStoreTests {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A2A certificate user has no access to Credential Retrieval accounts or list is empty. Check the Safegaurd A2A configuration.
+        /// </summary>
+        internal static string SafeguardNoAccessToRetrievableCredentials {
+            get {
+                return ResourceManager.GetString("SafeguardNoAccessToRetrievableCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Function not implemented for read-only Safeguard Credential Store.
         /// </summary>
         internal static string SafeguardReadOnly {
@@ -93,6 +102,15 @@ namespace UiPath.Orchestrator.SafeguardSecureStoreTests {
         internal static string SafeguardSettingInvalidOrMissing {
             get {
                 return ResourceManager.GetString("SafeguardSettingInvalidOrMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore SSL.
+        /// </summary>
+        internal static string SettingIgnoreSSL {
+            get {
+                return ResourceManager.GetString("SettingIgnoreSSL", resourceCulture);
             }
         }
         

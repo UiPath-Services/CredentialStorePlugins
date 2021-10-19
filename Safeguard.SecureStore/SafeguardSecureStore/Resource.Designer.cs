@@ -61,7 +61,7 @@ namespace UiPath.Orchestrator.SafeguardSecureStore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2}.
+        ///   Looks up a localized string similar to Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2} || ignoreSSL: {3}.
         /// </summary>
         internal static string JsonDeserializationIssue {
             get {
@@ -88,7 +88,7 @@ namespace UiPath.Orchestrator.SafeguardSecureStore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}.
+        ///   Looks up a localized string similar to Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}  || ignoreSSL: {3}.
         /// </summary>
         internal static string SafeguardSettingInvalidOrMissing {
             get {

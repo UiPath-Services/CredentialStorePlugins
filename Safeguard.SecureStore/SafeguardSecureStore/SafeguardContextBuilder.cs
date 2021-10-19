@@ -26,10 +26,6 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
             }
 
-            _context = _context ?? throw new SecureStoreException(
-                SecureStoreException.Type.InvalidConfiguration,
-                SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardJsonInvalidOrMissing), json));
-
             return this;
         }
 

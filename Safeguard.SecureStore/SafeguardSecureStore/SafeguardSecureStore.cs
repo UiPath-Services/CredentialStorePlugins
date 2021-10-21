@@ -48,18 +48,9 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
         public Task ValidateContextAsync(string context)
         {
-            try
-            {
-                var ctx = ConvertJsonToContext(context);
-                SafeguardClientFactory.Instance.GetClient(ctx).TestConnection();
-                return Task.CompletedTask;
-            }
-            catch (Exception)
-            {
-                throw new SecureStoreException(
-                SecureStoreException.Type.InvalidConfiguration,
-                SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardJsonInvalidOrMissing), context));
-            }
+            var ctx = ConvertJsonToContext(context);
+            SafeguardClientFactory.Instance.GetClient(ctx).TestConnection();
+            return Task.CompletedTask;
         }
 
         // Robots credential APIs

@@ -15,7 +15,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.OneIdentitySafeguard
         private ISafeguardA2AContext CreateSafeguardConnection() => OneIdentity.SafeguardDotNet.Safeguard.A2A.GetContext(_context.SafeguardAppliance, _context.SafeguardCertThumbprint, apiVersion: 3, ignoreSsl: _context.IgnoreSSL)
                 ?? throw new SecureStoreException(
                 SecureStoreException.Type.InvalidConfiguration,
-                SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
+                SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, "..." + _context.SafeguardCertThumbprint.Substring(36), _context.IgnoreSSL));
 
         public ISafeguardA2AContext GetConnection()
         {

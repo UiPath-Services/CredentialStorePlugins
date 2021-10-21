@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneIdentity.SafeguardDotNet;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security;
@@ -58,14 +59,14 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         {
             ////key (Robot) should be in format domain\user or machine\user or a2akey:<key> is given in external_name
 
-            var ctx = ConvertJsonToContext(context);
-            var safeguardKey = SafeguardUtils.ExtractKey(key);
+            var ctx = ConvertJsonToContext(context) ?? throw new Exception();
+            var safeguardKey = SafeguardUtils.ExtractKey(key) ?? throw new Exception();
             switch (safeguardKey["SafeguardA2AMethod"])
             {
                 case "a2akey":
-                    return GetCredential_A2A_APIKey(ctx, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword).Password;
+                    return GetCredential_A2A_APIKey(ctx, new NetworkCredential("", safeguardKey["SafeguardAPIKey"]).SecurePassword).Password ?? throw new Exception();
                 case "account_lookup":
-                    return GetCredential_A2A_Account(ctx, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password;
+                    return GetCredential_A2A_Account(ctx, safeguardKey["SafeguardAccount"], safeguardKey["SafeguardAsset"]).Password ?? throw new Exception();
                 default:
                     throw new SecureStoreException(
                         SecureStoreException.Type.SecretNotFound,
@@ -92,7 +93,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         {
             //key (Asset Name) should be in format user@target or a2akey:<key> is given in external_name
 
-            var ctx = ConvertJsonToContext(context);
+            var ctx = ConvertJsonToContext(context) ?? throw new Exception();
             try
             {
                 if (string.IsNullOrWhiteSpace(ctx.SafeguardAppliance) ||
@@ -155,7 +156,16 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         {
 
             var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
-            var accounts = a2AContext.GetRetrievableAccounts();
+
+            List<A2ARetrievableAccount> accounts;
+            try
+            {
+                accounts = (List<A2ARetrievableAccount>)a2AContext.GetRetrievableAccounts();
+            } catch (Exception e)
+            {
+                throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message);
+            }
+
             var api_key = new SecureString();
 
             for (int i = 0; i < accounts.Count; i++)
@@ -166,13 +176,27 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                         || (accounts[i].DomainName != null && accounts[i].DomainName == target)
                         || (accounts[i].DomainName != null && accounts[i].DomainName.Split('.')[0] == target)
                         || (accounts[i].AssetNetworkAddress != null && accounts[i].AssetNetworkAddress == target))
-                    )
+                    ) 
                 {
                     api_key = accounts[i].ApiKey;
                 }
             }
 
-            var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
+            if (api_key == null )
+            {
+                throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard. Account Name: " + targetaccount + " || Target: " + target + " || Count of retrievable accounts: " + accounts.Count);
+            }
+
+            //var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
+            NetworkCredential retcred= new NetworkCredential("", new SecureString());
+            try
+            {
+                retcred.SecurePassword = a2AContext.RetrievePassword(api_key);
+            }
+            catch (Exception e)
+            {
+                throw new SafeguardDotNetException("Unable to retrieve password from Safeguard. Error: " + e.Message);
+            }
 
             return new Credential
             {
@@ -195,16 +219,31 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             }
             else
             {
-                var accounts = a2AContext.GetRetrievableAccounts();
-                var cred = new Credential();
-                for (int i = 0; i < accounts.Count; i++)
+                List<OneIdentity.SafeguardDotNet.A2ARetrievableAccount> accounts;
+                try
                 {
-                    if (new NetworkCredential("", accounts[i].ApiKey).Password == new NetworkCredential("", api_key).Password)
-                    {
-                        cred.Username = accounts[i].AccountName;
-                        cred.Password = new NetworkCredential("", a2AContext.RetrievePassword(api_key)).Password;
-                    }
+                    accounts = (List<A2ARetrievableAccount>)a2AContext.GetRetrievableAccounts();
                 }
+                catch (Exception e)
+                {
+                    throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message);
+                }
+                var cred = new Credential();
+                try
+                {
+                    for (int i = 0; i < accounts.Count; i++)
+                    {
+                        if (new NetworkCredential("", accounts[i].ApiKey).Password == new NetworkCredential("", api_key).Password)
+                        {
+                            cred.Username = accounts[i].AccountName;
+                            cred.Password = new NetworkCredential("", a2AContext.RetrievePassword(api_key)).Password;
+                        }
+                    }
+                } catch (Exception e) 
+                {
+                    throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard, or cannot retrieve password from Safeguard. Username: " + cred.Username + "Error: " + e.Message);
+                }
+                    
                 return cred;
             }
         }

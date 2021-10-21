@@ -42,7 +42,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             {
                 throw new SecureStoreException(
                     SecureStoreException.Type.InvalidConfiguration,
-                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
+                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, "..." + _context.SafeguardCertThumbprint.Substring(36), _context.IgnoreSSL));
 
             }
 
@@ -51,7 +51,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
                 throw new SecureStoreException(
                     SecureStoreException.Type.InvalidConfiguration,
-                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, _context.SafeguardCertThumbprint, _context.IgnoreSSL));
+                    SafeguardUtils.GetLocalizedResource(nameof(Resource.SafeguardSettingInvalidOrMissing), _context.SafeguardAppliance, "..." + _context.SafeguardCertThumbprint.Substring(36), _context.IgnoreSSL));
 
             }
 

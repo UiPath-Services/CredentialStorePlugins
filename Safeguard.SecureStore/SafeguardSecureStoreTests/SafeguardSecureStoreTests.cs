@@ -27,6 +27,13 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         private readonly SafeguardSecureStore _sgStore = new SafeguardSecureStore();
 
         [Fact]
+        public void ValidateContextAsync()
+        {
+            _sgStore.ValidateContextAsync(ContextSafeguard);
+        }
+
+
+        [Fact]
         public void InitializeDoesNothing()
         {
             _sgStore.Initialize(new Dictionary<string, string>());

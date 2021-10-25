@@ -1,4 +1,5 @@
 ﻿using OneIdentity.SafeguardDotNet;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -57,6 +58,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         public Task ValidateContextAsync(string context)
         {
             var ctx = ConvertJsonToContext(context);
+            IsDebugLoggingOn(ctx.DebugLogging);
             SafeguardClientFactory.Instance.GetClient(ctx).TestConnection();
             return Task.CompletedTask;
         }
@@ -67,6 +69,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             ////key (Robot) should be in format domain\user or machine\user or a2akey:<key> is given in external_name
             
             var ctx = ConvertJsonToContext(context) ?? throw new Exception();
+            IsDebugLoggingOn(ctx.DebugLogging);
             var safeguardKey = SafeguardUtils.ExtractKey(key) ?? throw new Exception();
             switch (safeguardKey["SafeguardA2AMethod"])
             {
@@ -99,8 +102,8 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         public async Task<Credential> GetCredentialsAsync(string context, string key)
         {
             //key (Asset Name) should be in format user@target or a2akey:<key> is given in external_name
-
             var ctx = ConvertJsonToContext(context) ?? throw new Exception();
+            IsDebugLoggingOn(ctx.DebugLogging);
             try
             {
                 if (string.IsNullOrWhiteSpace(ctx.SafeguardAppliance) ||
@@ -159,14 +162,26 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
         }
 
+        public void IsDebugLoggingOn(Boolean debugSetting)
+        {
+            if (debugSetting == true)
+            {
+                Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.EventLog("UiPath", manageEventSource: true).CreateLogger();
+                Log.Debug("OneIdentity.SafeguardSecureStore debug logging enabled.");
+            }
+        }
+
         public Credential GetCredential_A2A_Account(SafeguardContext context, string targetaccount, string target)
         {
-
-           var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
+            Log.Debug("Executing GetCredential_A2A_Account");
+            Log.Debug("Obtaining a2AContext from SafeguardClientFactory");
+            var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
+            Log.Debug("a2AContext: " + a2AContext);
 
             List<A2ARetrievableAccount> accounts;
             try
             {
+                Log.Debug("Executing GetRetrieveableAccounts");
                 accounts = (List<A2ARetrievableAccount>)a2AContext.GetRetrievableAccounts();
             } catch (Exception e)
             {
@@ -175,6 +190,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
             var api_key = new SecureString();
 
+            Log.Debug("Looking up api_key for targetaccount: '" + targetaccount + "' and targetasset: '" + target + "' in retrieved list of accounts");
             for (int i = 0; i < accounts.Count; i++)
             {
                 if (
@@ -186,6 +202,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                     ) 
                 {
                     api_key = accounts[i].ApiKey;
+                    Log.Debug("api_key: ..." + api_key.ToInsecureString().Substring(40));
                 }
             }
 
@@ -198,6 +215,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             NetworkCredential retcred= new NetworkCredential("", new SecureString());
             try
             {
+                Log.Debug("Executing RetrievePassword");
                 retcred.SecurePassword = a2AContext.RetrievePassword(api_key);
             }
             catch (Exception e)

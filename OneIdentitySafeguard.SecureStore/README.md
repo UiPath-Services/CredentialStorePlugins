@@ -20,7 +20,7 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
   * Type: One Identity Safeguard
   * Name: give a meaningful name
   * Safeguard Appliance: enter the IP address or the hostname of the Safeguard SPP appliance
-  * Certificate thumbprint used to connect to Safeguard: Enter the thumbprint of the certificate that is stored in the Windows certificate store and will be used to connect to Safeguard
+  * Certificate thumbprint used to connect to Safeguard: Enter the thumbprint of the certificate that is stored in the Windows certificate store and will be used to connect to Safeguard (enter it in a format with capital letters).
   * Ignore SSL:
     * Set to true in case you don't want the Orchestrator to validate the SSL certificate of Safeguard.  
     * Set to false in case you want the Orchestrator to validate the SSL certificate of Safeguard. If so:
@@ -50,7 +50,14 @@ TODO
 TODO
 
 # Troubleshooting
-When you're trying to check out a password for an unattended robot with the Orchestrator and you see the following error in the Application Eventlog: {{Unable to connect to web service https://<safeguard-address>/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.}}:
+The following errors may show up in the Application Eventlog.
+## {{Authorization is required for this request}}
+Possible causes:
+* The Certificate of the A2A user is invalid or expired
+* 'Visible to Certificate User' is not enabled although the credential request is made by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+* Wrong asset value is configured, the requested account is not listed in the A2A registration
+
+## {{Unable to connect to web service https://<safeguard-address>/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.}}:
 * Check network connectivity from the Orchestrator to <safeguard-address>:443
 * Make sure the Application Identity running the Orchestrator has access to the certificate store where the A2A certificate is stored. Apply one of the following options:
   * Use a dedicated account to run the Orchestrator.

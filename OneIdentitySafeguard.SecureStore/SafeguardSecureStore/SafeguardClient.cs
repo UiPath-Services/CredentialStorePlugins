@@ -3,6 +3,7 @@ using OneIdentity.SafeguardDotNet.A2A;
 using UiPath.Orchestrator.Extensions.SecureStores.Safeguard;
 using UiPath.Orchestrator.Extensibility.SecureStores;
 using UiPath.Orchestrator.SafeguardSecureStore;
+using Serilog;
 
 namespace UiPath.Orchestrator.Extensions.SecureStores.OneIdentitySafeguard
 {
@@ -21,6 +22,11 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.OneIdentitySafeguard
         {
             if (_vaultClient == null)
             {
+                if (_context.DebugLogging == true)
+                {
+                    Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.EventLog("UiPath", manageEventSource: true).CreateLogger();
+                    Log.Debug("OneIdentity.SafeguardSecureStore debug logging enabled.");
+                }
                 _vaultClient = CreateSafeguardConnection();
             }
             return _vaultClient;

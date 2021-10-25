@@ -8,6 +8,7 @@ using UiPath.Orchestrator.Extensibility.Configuration;
 using UiPath.Orchestrator.Extensibility.SecureStores;
 using UiPath.Orchestrator.SafeguardSecureStore;
 
+
 namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 {
     public class SafeguardSecureStore : ISecureStore
@@ -42,6 +43,12 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                     Key = "IgnoreSSL",
                     DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingIgnoreSSL)),
                     IsMandatory = true,
+                },
+                new ConfigurationValue(ConfigurationValueType.Boolean)
+                {
+                    Key = "DebugLogging",
+                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingDebugLogging)),
+                    IsMandatory = true,
                 }
             };
 
@@ -58,7 +65,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         public async Task<string> GetValueAsync(string context, string key)
         {
             ////key (Robot) should be in format domain\user or machine\user or a2akey:<key> is given in external_name
-
+            
             var ctx = ConvertJsonToContext(context) ?? throw new Exception();
             var safeguardKey = SafeguardUtils.ExtractKey(key) ?? throw new Exception();
             switch (safeguardKey["SafeguardA2AMethod"])
@@ -155,7 +162,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
         public Credential GetCredential_A2A_Account(SafeguardContext context, string targetaccount, string target)
         {
 
-            var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
+           var a2AContext = SafeguardClientFactory.Instance.GetClient(context).GetConnection();
 
             List<A2ARetrievableAccount> accounts;
             try
@@ -163,7 +170,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 accounts = (List<A2ARetrievableAccount>)a2AContext.GetRetrievableAccounts();
             } catch (Exception e)
             {
-                throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message);
+                throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
             }
 
             var api_key = new SecureString();
@@ -195,7 +202,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             }
             catch (Exception e)
             {
-                throw new SafeguardDotNetException("Unable to retrieve password from Safeguard. Error: " + e.Message);
+                throw new SafeguardDotNetException("Unable to retrieve password from Safeguard. Error: " + e.Message, e.InnerException);
             }
 
             return new Credential
@@ -226,7 +233,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 }
                 catch (Exception e)
                 {
-                    throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message);
+                    throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
                 }
                 var cred = new Credential();
                 try
@@ -241,7 +248,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                     }
                 } catch (Exception e) 
                 {
-                    throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard, or cannot retrieve password from Safeguard. Username: " + cred.Username + "Error: " + e.Message);
+                    throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard, or cannot retrieve password from Safeguard. Username: " + cred.Username + "Error: " + e.Message, e.InnerException);
                 }
                     
                 return cred;

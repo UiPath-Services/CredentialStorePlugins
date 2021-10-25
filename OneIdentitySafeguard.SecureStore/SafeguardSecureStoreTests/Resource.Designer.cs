@@ -61,7 +61,7 @@ namespace UiPath.Orchestrator.SafeguardSecureStoreTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2}.
+        ///   Looks up a localized string similar to Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2} || ignoreSSL: {3}.
         /// </summary>
         internal static string JsonDeserializationIssue {
             get {
@@ -79,15 +79,6 @@ namespace UiPath.Orchestrator.SafeguardSecureStoreTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A2A certificate user has no access to Credential Retrieval accounts or list is empty. Check the Safegaurd A2A configuration.
-        /// </summary>
-        internal static string SafeguardNoAccessToRetrievableCredentials {
-            get {
-                return ResourceManager.GetString("SafeguardNoAccessToRetrievableCredentials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Function not implemented for read-only Safeguard Credential Store.
         /// </summary>
         internal static string SafeguardReadOnly {
@@ -97,11 +88,20 @@ namespace UiPath.Orchestrator.SafeguardSecureStoreTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}.
+        ///   Looks up a localized string similar to Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}  || ignoreSSL: {3}.
         /// </summary>
         internal static string SafeguardSettingInvalidOrMissing {
             get {
                 return ResourceManager.GetString("SafeguardSettingInvalidOrMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug Logging.
+        /// </summary>
+        internal static string SettingDebugLogging {
+            get {
+                return ResourceManager.GetString("SettingDebugLogging", resourceCulture);
             }
         }
         

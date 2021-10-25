@@ -5,6 +5,7 @@ using UiPath.Orchestrator.Extensibility.SecureStores;
 using FluentAssertions;
 using UiPath.Orchestrator.Extensibility.Configuration;
 using UiPath.Orchestrator.SafeguardSecureStoreTests;
+using System.Diagnostics;
 
 namespace UiPath.Samples.SecureStores.SafeguardStore
 {
@@ -34,8 +35,13 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
 
 
         [Fact]
-        public void InitializeDoesNothing()
+        public void Initialize()
         {
+
+            if (!EventLog.SourceExists("Orchestrator") && DebugLogging.Equals("true"))
+            {
+                EventLog.CreateEventSource("Orchestrator", "Application");
+            }
             _sgStore.Initialize(new Dictionary<string, string>());
         }
 
@@ -88,6 +94,12 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
                 {
                     Key = "IgnoreSSL",
                     DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingIgnoreSSL)),
+                    IsMandatory = true
+                },
+                new ConfigurationValue(ConfigurationValueType.Boolean)
+                {
+                    Key = "DebugLogging",
+                    DisplayName = SafeguardUtils.GetLocalizedResource(nameof(Resource.SettingDebugLogging)),
                     IsMandatory = true
                 },
             };

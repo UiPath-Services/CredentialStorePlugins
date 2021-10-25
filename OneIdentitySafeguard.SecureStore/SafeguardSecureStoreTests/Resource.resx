@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="JsonDeserializationIssue" xml:space="preserve">
-    <value>Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2}</value>
+    <value>Json deserialization issue | json: {0} || appliance: {1} || thumbprint: {2} || ignoreSSL: {3}</value>
   </data>
   <data name="SafeguardJsonInvalidOrMissing" xml:space="preserve">
     <value>Safeguard json is invalid or is missing, context: {0}</value>
@@ -127,7 +127,7 @@
     <value>Function not implemented for read-only Safeguard Credential Store</value>
   </data>
   <data name="SafeguardSettingInvalidOrMissing" xml:space="preserve">
-    <value>Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}</value>
+    <value>Invalid or missing Safeguard setting || appliance= {0} thumbprint={1}  || ignoreSSL: {3}</value>
   </data>
   <data name="SettingSafeguardAppliance" xml:space="preserve">
     <value>Safeguard Appliance</value>
@@ -138,7 +138,7 @@
   <data name="SettingIgnoreSSL" xml:space="preserve">
     <value>Ignore SSL</value>
   </data>
-  <data name="SafeguardNoAccessToRetrievableCredentials" xml:space="preserve">
-    <value>A2A certificate user has no access to Credential Retrieval accounts or list is empty. Check the Safegaurd A2A configuration</value>
+  <data name="SettingDebugLogging" xml:space="preserve">
+    <value>Debug Logging</value>
   </data>
 </root>

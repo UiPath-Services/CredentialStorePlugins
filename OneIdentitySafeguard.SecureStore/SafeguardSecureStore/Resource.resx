@@ -138,4 +138,7 @@
   <data name="SettingIgnoreSSL" xml:space="preserve">
     <value>Ignore SSL</value>
   </data>
+  <data name="SettingDebugLogging" xml:space="preserve">
+    <value>Debug Logging</value>
+  </data>
 </root>

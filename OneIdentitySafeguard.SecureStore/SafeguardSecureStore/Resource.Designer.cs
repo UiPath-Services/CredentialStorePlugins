@@ -97,6 +97,15 @@ namespace UiPath.Orchestrator.SafeguardSecureStore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug Logging.
+        /// </summary>
+        internal static string SettingDebugLogging {
+            get {
+                return ResourceManager.GetString("SettingDebugLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore SSL.
         /// </summary>
         internal static string SettingIgnoreSSL {

@@ -13,11 +13,11 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
 
     public class SafeguardSecureStoreTests
     {
-
         private const string SafeguardAppliance = "";
         private const string SafeguardCertThumbprint = "";
         private const string IgnoreSSL = "true";
-        private const string ContextSafeguard = "{\"SafeguardAppliance\": \"" + SafeguardAppliance + "\", \"SafeguardCertThumbprint\": \"" + SafeguardCertThumbprint + "\", \"IgnoreSSL\": " + IgnoreSSL + "}";
+        private const string DebugLogging = "false";
+        private const string ContextSafeguard = "{\"SafeguardAppliance\": \"" + SafeguardAppliance + "\", \"SafeguardCertThumbprint\": \"" + SafeguardCertThumbprint + "\", \"IgnoreSSL\": " + IgnoreSSL + ", \"DebugLogging\": " + DebugLogging + "}";
         private const string KeyAsset = "";
         private const string KeyDomain = "";
         private const string KeyApiKey = "";
@@ -37,11 +37,6 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         [Fact]
         public void Initialize()
         {
-
-            if (!EventLog.SourceExists("Orchestrator") && DebugLogging.Equals("true"))
-            {
-                EventLog.CreateEventSource("Orchestrator", "Application");
-            }
             _sgStore.Initialize(new Dictionary<string, string>());
         }
 

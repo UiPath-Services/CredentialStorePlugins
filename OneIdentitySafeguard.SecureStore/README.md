@@ -1,6 +1,6 @@
 # Introduction 
 The SafeguardSecureStore plugin is created to integrate UiPath with One Identity Safeguard for Privileged Passwords (SPP). This is a read-only plugin implementing the following use-cases:
-* Get Robot credentials from SPP by api-key or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+* Get Robot credentials from SPP by api-key or by DomainName\AccountName
 * Get Asset credentials from SPP by api-key or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 The plugin is based on OneIdentity.SafeguardDotNet 6.8.2
 
@@ -15,17 +15,44 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
   * Enable the __Visible to certificate user__ setting in case you want to get credentials by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
 ## Orchestrator Credential store configuration
-TODO
+* Navigate to __Tenant | Credential Stores__
+* Create a new Credential Store:
+  * Type: One Identity Safeguard
+  * Name: give a meaningful name
+  * Safeguard Appliance: enter the IP address or the hostname of the Safeguard SPP appliance
+  * Certificate thumbprint used to connect to Safeguard: Enter the thumbprint of the certificate that is stored in the Windows certificate store and will be used to connect to Safeguard
+  * Ignore SSL:
+    * Set to true in case you don't want the Orchestrator to validate the SSL certificate of Safeguard.  
+    * Set to false in case you want the Orchestrator to validate the SSL certificate of Safeguard. If so:
+      * TODO
+  * Debug Logging: If the to true, the plugin writes some logs into the Application Eventlog container. Leave it on false unless advised otherwise. 
 
 ## Orchestrator and Machine certificate configuration
 Make sure the A2A user's PFX certificate is imported into the local Windows certificate store, either to the Computer store or the store of the user account running the application.
 
 # Usage
+## Get Robot credentials from SPP by DomainName\AccountName
+* Navigate to __Tenant | Users__
+* Click the 3 dots on the user which you would like to use the Safeguard Credential Store. Click Edit.
+* Navigate to the option Unattended Robot, and set the Credential Store to the one just created.
+* Enter the domain\username of the account which the robot will checkout the password for from Safeguard.
 ## Get Robot credentials from SPP by api-key
-TODO
-## Get Robot credentials from SPP by AccountName@[AssetName|AssetNetworkAddress|DomainName]
-TODO
+* Obtain the A2A API key of the robot account from your Safeguard administrator.
+* Navigate to __Tenant | Users__
+* Click the 3 dots on the user which you would like to use the Safeguard Credential Store. Click Edit.
+* Navigate to the option Unattended Robot, and set the Credential Store to the one just created.
+* Enter the domain\username of the robot account.
+* Enter the A2A API key into the External Name field with the 'a2akey:' prefix.
+
 ## Get Asset credentials from SPP by api-key
 TODO
 ## Get Asset credentials from SPP by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 TODO
+
+# Troubleshooting
+When you're trying to check out a password for an unattended robot with the Orchestrator and you see the following error in the Application Eventlog: {{Unable to connect to web service https://<safeguard-address>/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.}}:
+* Check network connectivity from the Orchestrator to <safeguard-address>:443
+* Make sure the Application Identity running the Orchestrator has access to the certificate store where the A2A certificate is stored. Apply one of the following options:
+  * Use a dedicated account to run the Orchestrator.
+  * Grant access to the certificate stored in the certificate store for the Application Pool Identitity:
+    * TODO

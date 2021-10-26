@@ -22,8 +22,11 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.OneIdentitySafeguard
         {
             if (_vaultClient == null)
             {
+                Log.Debug("No available vaultClient found, creating new SafeGuardConnection");
                 _vaultClient = CreateSafeguardConnection();
+
             }
+            Log.Debug("vaultClient: " + _vaultClient);
             return _vaultClient;
         }
 

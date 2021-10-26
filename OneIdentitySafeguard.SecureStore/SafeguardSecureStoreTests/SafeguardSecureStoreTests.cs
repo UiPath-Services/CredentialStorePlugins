@@ -5,7 +5,6 @@ using UiPath.Orchestrator.Extensibility.SecureStores;
 using FluentAssertions;
 using UiPath.Orchestrator.Extensibility.Configuration;
 using UiPath.Orchestrator.SafeguardSecureStoreTests;
-using System.Diagnostics;
 
 namespace UiPath.Samples.SecureStores.SafeguardStore
 {
@@ -20,9 +19,10 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         private const string ContextSafeguard = "{\"SafeguardAppliance\": \"" + SafeguardAppliance + "\", \"SafeguardCertThumbprint\": \"" + SafeguardCertThumbprint + "\", \"IgnoreSSL\": " + IgnoreSSL + ", \"DebugLogging\": " + DebugLogging + "}";
         private const string KeyAsset = "";
         private const string KeyDomain = "";
-        private const string KeyApiKey = "";
+        private const string KeyApiKey = "sgkey:";
         private const string PasswordAssetUser = "";
         private const string PasswordDomainUser = "";
+        private const string PasswordAPIkeyUser = "";
 
 
         private readonly SafeguardSecureStore _sgStore = new SafeguardSecureStore();
@@ -122,7 +122,7 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         [Fact]
         public async void GetValueAsyncAPIKey()
         {
-            string expectedPassword = PasswordAssetUser;
+            string expectedPassword = PasswordAPIkeyUser;
             string actualPassword = await _sgStore.GetValueAsync(ContextSafeguard, KeyApiKey);
             actualPassword.Should().BeEquivalentTo(expectedPassword);
         }
@@ -157,7 +157,7 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
             Credential expectedCredential = new Credential
             {
                 Username = KeyAsset.Split('@')[0],
-                Password = PasswordAssetUser
+                Password = PasswordAPIkeyUser
             };
             Credential actualCredential = await _sgStore.GetCredentialsAsync(ContextSafeguard, KeyApiKey);
             actualCredential.Should().BeEquivalentTo(expectedCredential);

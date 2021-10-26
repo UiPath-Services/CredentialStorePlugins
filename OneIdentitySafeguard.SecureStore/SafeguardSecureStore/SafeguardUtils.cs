@@ -20,10 +20,10 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 { "SafeguardAPIKey", string.Empty},
                 { "SafeguardA2AMethod", string.Empty}
             };
-            if (key.StartsWith("a2akey:"))
+            if (key.StartsWith("sgkey:"))
             {
-                SafeguardA2ATarget["SafeguardAPIKey"] = key.Substring(7);
-                SafeguardA2ATarget["SafeguardA2AMethod"] = "a2akey";
+                SafeguardA2ATarget["SafeguardAPIKey"] = key.Substring(6);
+                SafeguardA2ATarget["SafeguardA2AMethod"] = "sgkey";
                 SafeguardA2ATarget["SafeguardAccount"] = "n/a";
             }
             else if (key.Contains("@"))

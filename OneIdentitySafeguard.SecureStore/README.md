@@ -3,7 +3,7 @@ The SafeguardSecureStore plugin is created to integrate UiPath with One Identity
 * Get Robot credentials from SPP by sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
 * Get Asset credentials from SPP by sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
-The plugin is based on _OneIdentity.SafeguardDotNet 6.11.0_
+The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__
 
 # Configuration
 The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP.
@@ -45,7 +45,12 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
 Make sure the A2A user's PFX certificate is imported into the Computer Store of the local Windows certificate store of the machine where the Orchestrator runs.
 
 In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead of a domain account, make sure that the ApplicationPoolIdentity has access to the certificate:
-* TODO
+* The private key of the Safeguard A2A user should be marked as exportable in the Certificate store. Open CMD as administrator and enter the following command: `certutil -store MY`. Locate the certificate in the dump. In case there is no line with _Private key is NOT exportable_ in the output, the private key is exportable. If the private key is not exportable, import the certificate again with exportable private key.
+* Open the MMC Certificate Store of the Local Computer, Navigate to personal certificates. 
+* Find the certificate of the Safeguard A2A user.
+* Right-click the certificate of the Safeguard A2A user and click __All Tasks > Manage Private Keys...__ and click the __Add__ button in the permission window.
+* Select __Location: Computer__ instead of the directory and enter __IIS AppPool\DefaultAppPool (or the Application Pool Identity UiPath is ran by)__ into the field of object names to select. Click OK
+* Enable __Read__ permissions for the Application Pool Identity
 
 # Usage
 ## Get Robot credentials from SPP by DomainName\AccountName
@@ -72,12 +77,12 @@ In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead 
 ## Get Asset credentials from SPP by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 * Navigate to the __{Desired Workspace} | Assets__ and create a new Asset
 * Set the Asset name and Select the previously created Safeguard Credential Store
-* In case the asset refers to a globally unique account, enable _Global Value_ and set the _External Name_ with one of the following templates (referring to the attributes of the Account stored in Safeguard):
+* In case the asset refers to a globally unique account, enable __Global Value__ and set the __External Name__ with one of the following templates (referring to the attributes of the Account stored in Safeguard):
   * AccountName@AssetName 
   * AccountName@AssetNetworkAddress 
   * AccountName@DomainName
   * DomainName\AccountName
-* In case the asset varies per user/machine then click the _+_ button and define the desired user/machine pair, then set the _External Name_ with one of the following templates (referring to the attributes of the Account stored in Safeguard):
+* In case the asset varies per user/machine then click the __+__ button and define the desired user/machine pair, then set the __External Name__ with one of the following templates (referring to the attributes of the Account stored in Safeguard):
   * AccountName@AssetName 
   * AccountName@AssetNetworkAddress 
   * AccountName@DomainName
@@ -89,11 +94,11 @@ The following errors may show up in the Application Eventlog.
 ## Authorization is required for this request
 Possible causes:
 * The Certificate of the A2A user is invalid or expired
-* _Visible to Certificate User_ option is not enabled in SPP although the credential request is made by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+* The __Visible to Certificate User__ option is not enabled in SPP although the credential request is made by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 * Wrong asset value is configured, the requested account is not listed in the A2A registration
 * Invalid sgkey given
 
-## Unable to connect to web service https://{safeguard-address}/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.:
+## Unable to connect to web service https://{safeguard-address}/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.
 * Check network connectivity from the Orchestrator to {safeguard-address}:443
 * Make sure the Application Identity running the Orchestrator has access to the certificate store where the A2A certificate is stored. Apply one of the following options:
   * Use a dedicated account to run the Orchestrator.

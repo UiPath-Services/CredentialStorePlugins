@@ -17,12 +17,6 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
 
 ## Orchestrator Credential store configuration
 * Copy the UiPath.Orchestrator.SafeguardSecureStore.dll 6.11.0 into the Orchestrator\plugins folder. Also copy the following DLL dependencies (netstandard2.0) into the same folder:
-  * Microsoft.Extensions.Caching.Abstractions.dll
-  * Microsoft.Extensions.Caching.Memory.dll minversion: 5.0.0.
-  * Microsoft.Extensions.DependencyInjection.Abstractions.dll
-  * Microsoft.Extensions.Logging.Abstractions.dll
-  * Microsoft.Extensions.Options.dll
-  * Microsoft.Extensions.Primitives.dll
   * Newtonsoft.Json.dll minversion: 13.0.1
   * RestSharp.dll minversion: 106.12.0
   * Serilog.dll minversion: 2.10.0
@@ -49,7 +43,7 @@ In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead 
 * Open the MMC Certificate Store of the Local Computer, Navigate to personal certificates. 
 * Find the certificate of the Safeguard A2A user.
 * Right-click the certificate of the Safeguard A2A user and click __All Tasks > Manage Private Keys...__ and click the __Add__ button in the permission window.
-* Select __Location: Computer__ instead of the directory and enter __IIS AppPool\DefaultAppPool (or the Application Pool Identity UiPath is ran by)__ into the field of object names to select. Click OK
+* Select __Location: Computer__ instead of the directory and enter __IIS AppPool\UiPath Orchestrator (or the Application Pool UiPath is ran by)__ into the field of object names to select. Click OK
 * Enable __Read__ permissions for the Application Pool Identity
 
 # Usage

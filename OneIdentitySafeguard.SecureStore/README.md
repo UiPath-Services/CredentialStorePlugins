@@ -1,7 +1,8 @@
 # Introduction 
 The SafeguardSecureStore plugin is created to integrate UiPath with One Identity Safeguard for Privileged Passwords (SPP). This is a read-only plugin implementing the following use-cases:
-* Get Robot credentials from SPP by api-key or by DomainName\AccountName
-* Get Asset credentials from SPP by api-key or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+* Get Robot credentials from SPP by sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
+* Get Asset credentials from SPP by sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+
 The plugin is based on OneIdentity.SafeguardDotNet 6.8.2
 
 # Configuration
@@ -25,7 +26,7 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
   * RestSharp.dll minversion: 106.11.7
   * Serilog.dll minversion: 2.10.0
   * Serilog.Sinks.EventLog.dll minversion 3.1.0
-* Enable the SafeguardSecureStore plugin as instructed by the UiPath guide. Open the Orchestrator\UiPath.Orchestrator.dll.config file and add the following line to <appSettings>: {{<add key="Plugins.SecureStores" value="UiPath.Orchestrator.SafeguardSecureStore.dll"/>}}
+* Enable the SafeguardSecureStore plugin as instructed by the UiPath guide. Open the Orchestrator\UiPath.Orchestrator.dll.config file and add the following line to `<appSettings>`: `<add key="Plugins.SecureStores" value="UiPath.Orchestrator.SafeguardSecureStore.dll"/>`
 * Navigate to __Tenant | Credential Stores__
 * Create a new Credential Store:
   * Type: One Identity Safeguard
@@ -40,6 +41,7 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
 
 ## Orchestrator certificate configuration
 Make sure the A2A user's PFX certificate is imported into the Computer Store of the local Windows certificate store of the machine where the Orchestrator runs.
+
 In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead of a domain account, make sure that the ApplicationPoolIdentity has access to the certificate:
 * TODO
 
@@ -64,15 +66,15 @@ TODO
 
 # Troubleshooting
 The following errors may show up in the Application Eventlog.
-## {{Authorization is required for this request}}
+## Authorization is required for this request
 Possible causes:
 * The Certificate of the A2A user is invalid or expired
 * 'Visible to Certificate User' is not enabled although the credential request is made by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 * Wrong asset value is configured, the requested account is not listed in the A2A registration
 * Invalid sgkey given
 
-## {{Unable to connect to web service https://<safeguard-address>/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.}}:
-* Check network connectivity from the Orchestrator to <safeguard-address>:443
+## Unable to connect to web service https://{safeguard-address}/service/core/v3, Error: An error occurred while sending the request. The read operation failed, see inner exception.:
+* Check network connectivity from the Orchestrator to {safeguard-address}:443
 * Make sure the Application Identity running the Orchestrator has access to the certificate store where the A2A certificate is stored. Apply one of the following options:
   * Use a dedicated account to run the Orchestrator.
   * Grant access to the certificate stored in the certificate store for the Application Pool Identitity, see above at 'Orchestrator certificate configuration'

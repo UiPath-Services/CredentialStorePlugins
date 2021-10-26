@@ -136,7 +136,7 @@
     <value>Certificate thumprint used to connect to Safeguard</value>
   </data>
   <data name="SettingIgnoreSSL" xml:space="preserve">
-    <value>Ignore SSL</value>
+    <value>Do not validate the SSL certificate of Safeguard (IgnoreSSL)</value>
   </data>
   <data name="SettingDebugLogging" xml:space="preserve">
     <value>Debug Logging</value>

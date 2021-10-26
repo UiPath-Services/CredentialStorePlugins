@@ -106,7 +106,7 @@ namespace UiPath.Orchestrator.SafeguardSecureStore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ignore SSL.
+        ///   Looks up a localized string similar to Do not validate the SSL certificate of Safeguard (IgnoreSSL).
         /// </summary>
         internal static string SettingIgnoreSSL {
             get {

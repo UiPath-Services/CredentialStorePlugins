@@ -4,7 +4,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.8.2" />
+    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.11.0" />
     <PackageReference Include="Serilog.Sinks.EventLog" Version="3.1.0" />
     <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />

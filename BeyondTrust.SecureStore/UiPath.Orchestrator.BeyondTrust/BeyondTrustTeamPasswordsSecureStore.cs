@@ -11,6 +11,8 @@ namespace UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly
 {
     public class BeyondTrustTeamPasswordsSecureStore : ISecureStore
     {
+        private readonly object locker = new object();
+
         public void Initialize(Dictionary<string, string> hostSettings)
         {
             // No host level settings
@@ -84,60 +86,61 @@ namespace UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly
             var teamPasswordFolderName = keyPieces[0];
             var teamPasswordName = keyPieces[1];
 
-            var client = BeyondTrustVaultClientFactory.GetClient(context);
-            client.SignIn();
-            var teamPasswordFoldersResult = client.TeamPasswordsFolders.GetAll();
-            if (!teamPasswordFoldersResult.IsSuccess)
+            lock (locker)
             {
+                var client = BeyondTrustVaultClientFactory.GetClient(context);
+                client.SignIn();
+                var teamPasswordFoldersResult = client.TeamPasswordsFolders.GetAll();
+                if (!teamPasswordFoldersResult.IsSuccess)
+                {
+                    client.SignOut();
+                    if (teamPasswordFoldersResult.StatusCode.Equals(HttpStatusCode.NotFound))
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Folder not found");
+                    }
+                    else
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Folder retreival failed");
+                    }
+                }
+
+                var teamPasswordFolder = teamPasswordFoldersResult.Value.Find(f => teamPasswordFolderName.Equals(f.Name));
+
+                var teamPasswordsIncompleteResult = client.TeamPasswordsCredentials.GetAll(teamPasswordFolder.Id);
+                if (!teamPasswordsIncompleteResult.IsSuccess)
+                {
+                    client.SignOut();
+                    if (teamPasswordsIncompleteResult.StatusCode.Equals(HttpStatusCode.NotFound))
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password not found");
+                    }
+                    else
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password retreival failed");
+                    }
+                }
+
+                // Doesn't contain password
+                var teamPasswordIncomplete = teamPasswordsIncompleteResult.Value.Find(p => teamPasswordName.Equals(p.Title));
+
+                var teamPasswordResult = client.TeamPasswordsCredentials.Get(teamPasswordIncomplete.Id);
+                if (!teamPasswordResult.IsSuccess)
+                {
+                    client.SignOut();
+                    if (teamPasswordResult.StatusCode.Equals(HttpStatusCode.NotFound))
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password not found");
+                    }
+                    else
+                    {
+                        throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password retreival failed");
+                    }
+                }
+
                 client.SignOut();
-                if (teamPasswordFoldersResult.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Folder not found");
-                }
-                else
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Folder retreival failed");
-                }
+
+                return new Credential { Username = teamPasswordResult.Value.Username, Password = teamPasswordResult.Value.Password };
             }
-
-            var teamPasswordFolder = teamPasswordFoldersResult.Value.Find(f => teamPasswordFolderName.Equals(f.Name));
-
-            var teamPasswordsIncompleteResult = client.TeamPasswordsCredentials.GetAll(teamPasswordFolder.Id);
-            if (!teamPasswordsIncompleteResult.IsSuccess)
-            {
-                client.SignOut();
-                if (teamPasswordsIncompleteResult.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password not found");
-                }
-                else
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password retreival failed");
-                }
-            }
-
-            // Doesn't contain password
-            var teamPasswordIncomplete = teamPasswordsIncompleteResult.Value.Find(p => teamPasswordName.Equals(p.Title));
-
-            var teamPasswordResult = client.TeamPasswordsCredentials.Get(teamPasswordIncomplete.Id);
-            if (!teamPasswordResult.IsSuccess)
-            {
-                client.SignOut();
-                if (teamPasswordResult.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password not found");
-                }
-                else
-                {
-                    throw new SecureStoreException(SecureStoreException.Type.UnsupportedOperation, "Team Password retreival failed");
-                }
-            }
-
-            client.SignOut();
-
-            return new Credential { Username = teamPasswordResult.Value.Username, Password = teamPasswordResult.Value.Password };
-
-
         }
 
         public async Task<string> UpdateCredentialsAsync(string context, string key, string oldAugumentedKey, Credential value)

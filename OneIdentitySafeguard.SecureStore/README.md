@@ -49,7 +49,7 @@ In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead 
 * Open the MMC Certificate Store of the Local Computer, Navigate to personal certificates. 
 * Find the certificate of the Safeguard A2A user.
 * Right-click the certificate of the Safeguard A2A user and click __All Tasks > Manage Private Keys...__ and click the __Add__ button in the permission window.
-* Select __Location: Computer__ instead of the directory and enter __IIS AppPool\DefaultAppPool (or the Application Pool Identity UiPath is ran by)__ into the field of object names to select. Click OK
+* Select __Location: Computer__ instead of the directory and enter __IIS AppPool\UiPath Orchestrator (or the Application Pool UiPath is ran by)__ into the field of object names to select. Click OK
 * Enable __Read__ permissions for the Application Pool Identity
 
 # Usage

@@ -219,11 +219,11 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             for (int i = 0; i < accounts.Count; i++)
             {
                 if (
-                    accounts[i].AccountName == targetaccount &&
-                    ((accounts[i].AssetName != null && accounts[i].AssetName == target)
-                        || (accounts[i].DomainName != null && accounts[i].DomainName == target)
-                        || (accounts[i].DomainName != null && accounts[i].DomainName.Split('.')[0] == target)
-                        || (accounts[i].AssetNetworkAddress != null && accounts[i].AssetNetworkAddress == target))
+                    accounts[i].AccountName.ToLower() == targetaccount.ToLower() &&
+                    ((accounts[i].AssetName != null && accounts[i].AssetName.ToLower() == target.ToLower())
+                        || (accounts[i].DomainName != null && accounts[i].DomainName.ToLower() == target.ToLower())
+                        || (accounts[i].DomainName != null && accounts[i].DomainName.ToLower().Split('.')[0] == target.ToLower())
+                        || (accounts[i].AssetNetworkAddress != null && accounts[i].AssetNetworkAddress.ToLower() == target.ToLower()))
                     ) 
                 {
                     api_key = accounts[i].ApiKey;

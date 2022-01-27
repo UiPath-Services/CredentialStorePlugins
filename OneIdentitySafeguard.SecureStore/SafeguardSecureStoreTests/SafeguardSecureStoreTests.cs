@@ -156,7 +156,7 @@ namespace UiPath.Samples.SecureStores.SafeguardStore
         {
             Credential expectedCredential = new Credential
             {
-                Username = KeyAsset.Split('@')[0],
+                Username = KeyAsset.ToLower().Split('@')[0],
                 Password = PasswordAPIkeyUser
             };
             Credential actualCredential = await _sgStore.GetCredentialsAsync(ContextSafeguard, KeyApiKey);

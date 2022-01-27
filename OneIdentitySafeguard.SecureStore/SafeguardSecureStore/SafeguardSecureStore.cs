@@ -16,7 +16,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
     public class SafeguardSecureStore : ISecureStore
     {
 
-        public ILogger _dummy = null;
+        public LoggerConfiguration _dummyConfiguration = null;
         public Serilog.Sinks.EventLog.EventLogSink _sink = null;
         public ISafeguardConnection _connection = null;
 

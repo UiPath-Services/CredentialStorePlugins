@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29201.188
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeyondTrust-UnitTest", "BeyondTrust-UnitTest\BeyondTrust-UnitTest.csproj", "{5B260992-D116-4BB3-BE67-0871934D79B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.BeyondInsight.API", "BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj", "{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UiPath.BeyondInsight.API", "BeyondTrust.BeyondInsight.API\UiPath.BeyondInsight.API.csproj", "{109E0E0B-7175-4819-AA62-AC4F0B8EFDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj", "{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UiPath.Orchestrator.BeyondTrust", "UiPath.Orchestrator.BeyondTrust\UiPath.Orchestrator.BeyondTrust.csproj", "{ACF6EEB9-BB60-492A-BB1A-A28DEAD8FE72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4B4A708-5498-47DC-8E7D-F0339805F258}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -20,7 +20,7 @@ namespace UiPath.Orchestrator.BeyondTrustDynamicSystemReadOnly
 
         public Task ValidateContextAsync(string context)
         {
-            BeyondTrustVaultClientFactory.GetClient(context).TestConnection();
+            BeyondTrustVaultClientFactory.Instance.GetClient(context).TestConnection();
             return Task.CompletedTask;
         }
 
@@ -92,7 +92,7 @@ namespace UiPath.Orchestrator.BeyondTrustDynamicSystemReadOnly
 
             lock (locker)
             {
-                var client = BeyondTrustVaultClientFactory.GetClient(context);
+                var client = BeyondTrustVaultClientFactory.Instance.GetClient(context);
                 client.SignIn();
                 var managedAccountResult = client.ManagedAccounts.GetRequestable(managedSystemName, managedAccountName, config["ManagedAccountType"].ToString());
                 if (!managedAccountResult.IsSuccess)

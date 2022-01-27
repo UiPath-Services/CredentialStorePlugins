@@ -20,7 +20,7 @@ namespace UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly
 
         public Task ValidateContextAsync(string context)
         {
-            BeyondTrustVaultClientFactory.GetClient(context).TestConnection();
+            BeyondTrustVaultClientFactory.Instance.GetClient(context).TestConnection();
             return Task.CompletedTask;
         }
 
@@ -88,7 +88,7 @@ namespace UiPath.Orchestrator.BeyondTrustTeamPasswordsReadOnly
 
             lock (locker)
             {
-                var client = BeyondTrustVaultClientFactory.GetClient(context);
+                var client = BeyondTrustVaultClientFactory.Instance.GetClient(context);
                 client.SignIn();
                 var teamPasswordFoldersResult = client.TeamPasswordsFolders.GetAll();
                 if (!teamPasswordFoldersResult.IsSuccess)

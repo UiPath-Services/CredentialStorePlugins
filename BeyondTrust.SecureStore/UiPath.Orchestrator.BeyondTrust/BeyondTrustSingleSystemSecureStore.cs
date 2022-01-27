@@ -19,7 +19,7 @@ namespace UiPath.Orchestrator.BeyondTrustSingleSystemReadOnly
 
         public Task ValidateContextAsync(string context)
         {
-            BeyondTrustVaultClientFactory.GetClient(context).TestConnection();
+            BeyondTrustVaultClientFactory.Instance.GetClient(context).TestConnection();
             return Task.CompletedTask;
         }
 
@@ -82,7 +82,7 @@ namespace UiPath.Orchestrator.BeyondTrustSingleSystemReadOnly
             var config = JsonConvert.DeserializeObject<Dictionary<string, object>>(context);
             lock (locker)
             {
-                var client = BeyondTrustVaultClientFactory.GetClient(context);
+                var client = BeyondTrustVaultClientFactory.Instance.GetClient(context);
                 client.SignIn();
                 var managedAccountResult = client.ManagedAccounts.GetRequestable(config["ManagedSystemName"].ToString(), key, config["ManagedAccountType"].ToString());
                 if (!managedAccountResult.IsSuccess)

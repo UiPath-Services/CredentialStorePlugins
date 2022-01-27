@@ -1,4 +1,5 @@
-﻿using OneIdentity.SafeguardDotNet;
+﻿using Microsoft.Extensions.Caching.Memory;
+using OneIdentity.SafeguardDotNet;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,12 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 {
     public class SafeguardSecureStore : ISecureStore
     {
+
+        public ILogger _dummy = null;
+        public Serilog.Sinks.EventLog.EventLogSink _sink = null;
+        public ISafeguardConnection _connection = null;
+
+
         public SecureStoreInfo GetStoreInfo() =>
             new SecureStoreInfo { Identifier = "One Identity Safeguard", IsReadOnly = true };
 

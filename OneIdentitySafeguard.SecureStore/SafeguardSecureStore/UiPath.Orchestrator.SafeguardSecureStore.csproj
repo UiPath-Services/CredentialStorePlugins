@@ -4,12 +4,24 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Version>1.0.1</Version>
     <Description>Based on SafeguardDotNet 6.8.2</Description>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningsAsErrors>$(WarningsAsErrors)</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors>$(WarningsAsErrors)</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.8.2" />
+	<PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.8.2">
+		<NoWarn>NU1605</NoWarn>
+	</PackageReference>
+    <!--<PackageReference Include="RestSharp" Version="106.3.1" >
+		<NoWarn>NU1605</NoWarn>
+	</PackageReference>-->
     <PackageReference Include="Serilog.Sinks.EventLog" Version="3.1.0" />
     <PackageReference Include="UiPath.Orchestrator.Extensibility" Version="1.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resource.Designer.cs">

@@ -3,11 +3,7 @@ The SafeguardSecureStore plugin is created to integrate UiPath with One Identity
 * Get Robot credentials from SPP by sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
 * Get Asset credentials from SPP by sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
-The plugin is based on __OneIdentity.SafeguardDotNet 6.8.2__ in order to use the libraries available by default on the Orchestrator. Should you require a newer SafeguardDotNet version please open an issue.
-The plugin has been tested with SPP version 6.11.1 and UiPath Orchestrator 21.4.2.
-
-# Prerequisites
-* SPP should be accessible on port 443 from the Orchestrator.
+The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__
 
 # Configuration
 The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP.

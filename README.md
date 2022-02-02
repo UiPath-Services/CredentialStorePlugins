@@ -5,8 +5,7 @@ Download the latest releases from the Releases page on the right 👉
 
 For questions and support: andrei.cristea@uipath.com
 
-## One Identity Safeguard Secure Store
- Instructions can be found on its [README page](https://github.com/UiPath-Services/CredentialStorePlugins/tree/main/OneIdentitySafeguard.SecureStore).
+OneIdentity Secure Store coming soon.
 
 ## Beyond Trust Secure Store
 Setup instructions can be found inside the latest build ZIP, or here 👉 

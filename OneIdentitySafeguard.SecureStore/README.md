@@ -3,7 +3,15 @@ The SafeguardSecureStore plugin is created to integrate UiPath with One Identity
 * Get Robot credentials from SPP by sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
 * Get Asset credentials from SPP by sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
-The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__
+The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__ (see the Releases for the different versions the plugin is tested with).
+
+# Pre-requisites
+*	A PFX certificate that will be used by the Orchestrator to connect to Safeguard.
+*	The above certificate must be validated by one of the certificates already available on Safeguard (Settings | Certificates | Trusted Certificates) or a new certificate must be created for this purpose too.
+*	In case you wish to enable SSL certificate validation on the side of the Orchestrator too, the signing CA of the Safeguard SSL certificate is required too (available at Settings | Certificates | SSL certificates) and Safeguard must be reachable from the Orchestrator via one of the IP addresses or DNS names available in the CN or SAN fields of the Safeguard SSL certificate.
+*	Customer personnel with administrative rights on Safeguard in order to configure the user and the application registration settings of the Orchestrator (see the configuration steps below).
+*	Customer personnel with administrative rights to manage the certificates on the Orchestrator machine (Local Computer certificate store, see the configuration steps below)
+*	The plugin downloaded from Releases.
 
 # Configuration
 The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP.

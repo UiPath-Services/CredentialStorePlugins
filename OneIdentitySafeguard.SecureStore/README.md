@@ -1,11 +1,16 @@
 # Introduction 
 The SafeguardSecureStore plugin is created to integrate UiPath with One Identity Safeguard for Privileged Passwords (SPP). This is a read-only plugin implementing the following use-cases:
-* Get Robot credentials from SPP by sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
-* Get Asset credentials from SPP by sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
+* Get Robot credentials from SPP by using an External Name formatted as sgkey:{a2a-api-key-from-spp} or by DomainName\AccountName
+* Get Asset credentials from SPP by using an External Name formatted as sgkey:{a2a-api-key-from-spp} or by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
-The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__ (see the Releases for the different versions the plugin is tested with).
+The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP. The Orchestrator acts a credential broker for both unattended or attended scenarios, the robots are not connected to SPP but to the Orchestrator.
+Access request workflow based password release is currently not supported, open an issue on GitHub or contact One Identity in case of having such interest.
+
+# Releases
+See the [Releases](https://github.com/UiPath-Services/CredentialStorePlugins/releases?q=OneIdentity.SafeguardSecureStore&expanded=true) for a plugin working with your Orchestrator and SPP versions.
 
 # Pre-requisites
+* The Orchestrator has access to SPP on port 443.
 *	A PFX certificate that will be used by the Orchestrator to connect to Safeguard.
 *	The above certificate must be validated by one of the certificates already available on Safeguard (Settings | Certificates | Trusted Certificates) or a new certificate must be created for this purpose too.
 *	In case you wish to enable SSL certificate validation on the side of the Orchestrator too, the signing CA of the Safeguard SSL certificate is required too (available at Settings | Certificates | SSL certificates) and Safeguard must be reachable from the Orchestrator via one of the IP addresses or DNS names available in the CN or SAN fields of the Safeguard SSL certificate.
@@ -13,8 +18,8 @@ The plugin is based on __OneIdentity.SafeguardDotNet 6.11.0__ (see the Releases 
 *	Customer personnel with administrative rights to manage the certificates on the Orchestrator machine (Local Computer certificate store, see the configuration steps below)
 *	The plugin downloaded from Releases.
 
+
 # Configuration
-The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP.
 
 ## SPP Configuration
 Configure A2A according to the [SPP Administration guide](https://support.oneidentity.com/technical-documents/one-identity-safeguard-for-privileged-passwords/administration-guide):
@@ -24,18 +29,14 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
   * Enable the __Visible to certificate user__ setting in case you want to get credentials by AccountName@[AssetName|AssetNetworkAddress|DomainName]
 
 ## Orchestrator Credential store configuration
-* Copy the UiPath.Orchestrator.SafeguardSecureStore.dll 6.11.0 into the Orchestrator\plugins folder. Also copy the following DLL dependencies (netstandard2.0) into the same folder:
-  * Newtonsoft.Json.dll minversion: 13.0.1
-  * RestSharp.dll minversion: 106.12.0
-  * Serilog.dll minversion: 2.10.0
-  * Serilog.Sinks.EventLog.dll minversion 3.1.0
-* Enable the SafeguardSecureStore plugin as instructed by the UiPath guide. Open the Orchestrator\UiPath.Orchestrator.dll.config file and add the following line to `<appSettings>`: `<add key="Plugins.SecureStores" value="UiPath.Orchestrator.SafeguardSecureStore.dll"/>`
+* Copy the UiPath.Orchestrator.SafeguardSecureStore.dll into the Orchestrator\plugins folder as well as the corresponding dependencies. The requires dependencies should be included into the release zip bundle (netstandard2.0).
+* Enable the SafeguardSecureStore plugin as instructed by the UiPath documentation. Open the Orchestrator\UiPath.Orchestrator.dll.config file and add the following line to `<appSettings>`: `<add key="Plugins.SecureStores" value="UiPath.Orchestrator.SafeguardSecureStore.dll"/>`
 * Navigate to __Tenant | Credential Stores__
 * Create a new Credential Store:
   * Type: One Identity Safeguard
   * Name: give a meaningful name
   * Safeguard Appliance: enter the IP address or the hostname of the Safeguard SPP appliance
-  * Certificate thumbprint used to connect to Safeguard: Enter the thumbprint of the certificate that is stored in the Windows certificate store and will be used to connect to Safeguard (enter it in a format with capital letters).
+  * Certificate thumbprint used to connect to Safeguard: Enter the thumbprint of the certificate that is stored in the Windows certificate store and will be used to connect to Safeguard.
   * Do not validate the SSL certificate of Safeguard (IgnoreSSL):
     * Set to true in case you don't want the Orchestrator to validate the SSL certificate of Safeguard.  
     * Set to false in case you want the Orchestrator to validate the SSL certificate of Safeguard. If so:
@@ -46,7 +47,7 @@ Configure A2A according to the [SPP Administration guide](https://support.oneide
 ## Orchestrator certificate configuration
 Make sure the A2A user's PFX certificate is imported into the Computer Store of the local Windows certificate store of the machine where the Orchestrator runs.
 
-In case the Orhcestrator is executed by a local ApplicationPoolIdentity instead of a domain account, make sure that the ApplicationPoolIdentity has access to the certificate:
+Make sure that the account running the Orchestrator has access to the certificate (bey default ApplicationPoolIdentity):
 * The private key of the Safeguard A2A user should be marked as exportable in the Certificate store. Open CMD as administrator and enter the following command: `certutil -store MY`. Locate the certificate in the dump. In case there is no line with _Private key is NOT exportable_ in the output, the private key is exportable. If the private key is not exportable, import the certificate again with exportable private key.
 * Open the MMC Certificate Store of the Local Computer, Navigate to personal certificates. 
 * Find the certificate of the Safeguard A2A user.

@@ -6,10 +6,18 @@ The SafeguardSecureStore plugin is created to integrate UiPath with One Identity
 The integration is based on the Application to Application (A2A) credential retrieval functionality of SPP. The Orchestrator acts a credential broker for both unattended or attended scenarios, the robots are not connected to SPP but to the Orchestrator.
 Access request workflow based password release is currently not supported, open an issue on GitHub or contact One Identity in case of having such interest.
 
+# Releases
 See the [Releases](https://github.com/UiPath-Services/CredentialStorePlugins/releases?q=OneIdentity.SafeguardSecureStore&expanded=true) for a plugin working with your Orchestrator and SPP versions.
 
-# Prerequisites
-* SPP should be accessible on port 443 from the Orchestrator.
+# Pre-requisites
+* The Orchestrator has access to SPP on port 443.
+*	A PFX certificate that will be used by the Orchestrator to connect to Safeguard.
+*	The above certificate must be validated by one of the certificates already available on Safeguard (Settings | Certificates | Trusted Certificates) or a new certificate must be created for this purpose too.
+*	In case you wish to enable SSL certificate validation on the side of the Orchestrator too, the signing CA of the Safeguard SSL certificate is required too (available at Settings | Certificates | SSL certificates) and Safeguard must be reachable from the Orchestrator via one of the IP addresses or DNS names available in the CN or SAN fields of the Safeguard SSL certificate.
+*	Customer personnel with administrative rights on Safeguard in order to configure the user and the application registration settings of the Orchestrator (see the configuration steps below).
+*	Customer personnel with administrative rights to manage the certificates on the Orchestrator machine (Local Computer certificate store, see the configuration steps below)
+*	The plugin downloaded from Releases.
+
 
 # Configuration
 

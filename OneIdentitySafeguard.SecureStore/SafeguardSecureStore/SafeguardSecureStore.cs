@@ -210,7 +210,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 Log.Debug("Number of retrievable accounts: " + accounts.Count);
             } catch (Exception e)
             {
-                throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
+                throw new SecureStoreException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
             }
 
             var api_key = new SecureString();
@@ -233,7 +233,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
 
             if (api_key == null )
             {
-                throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard. Account Name: " + targetaccount + " || Target: " + target + " || Count of retrievable accounts: " + accounts.Count);
+                throw new SecureStoreException("Cannot find matching retrievable account in Safeguard. Account Name: " + targetaccount + " || Target: " + target + " || Count of retrievable accounts: " + accounts.Count);
             }
 
             //var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
@@ -245,7 +245,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             }
             catch (Exception e)
             {
-                throw new SafeguardDotNetException("Unable to retrieve password from Safeguard. Error: " + e.Message, e.InnerException);
+                throw new SecureStoreException("Unable to retrieve password from Safeguard. Error: " + e.Message, e.InnerException);
             }
 
             return new Credential
@@ -284,7 +284,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                 }
                 catch (Exception e)
                 {
-                    throw new SafeguardDotNetException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
+                    throw new SecureStoreException("Unable to retrieve accounts from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
                 }
                 var cred = new Credential();
                 try
@@ -302,7 +302,7 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
                     }
                 } catch (Exception e) 
                 {
-                    throw new SafeguardDotNetException("Cannot find matching retrievable account in Safeguard, or cannot retrieve password from Safeguard. Username: " + cred.Username + "Error: " + e.Message, e.InnerException);
+                    throw new SecureStoreException("Cannot find matching retrievable account in Safeguard, or cannot retrieve password from Safeguard. Username: " + cred.Username + "Error: " + e.Message, e.InnerException);
                 }
                     
                 return cred;

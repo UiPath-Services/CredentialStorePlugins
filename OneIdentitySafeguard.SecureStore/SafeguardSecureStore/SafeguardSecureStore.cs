@@ -266,12 +266,19 @@ namespace UiPath.Orchestrator.Extensions.SecureStores.Safeguard
             {
                 Log.Debug("Looking up account is not required, Credential will be returned with empty username, only with password.");
                 Log.Debug("Retrieving password for api key: ..." + api_key.ToInsecureString().Substring(41));
-                var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
-                return new Credential
+                try
                 {
-                    Username = string.Empty,
-                    Password = retcred.Password,
-                };
+                    var retcred = new NetworkCredential("", a2AContext.RetrievePassword(api_key));
+                    return new Credential
+                    {
+                        Username = string.Empty,
+                        Password = retcred.Password,
+                    };
+                }
+                catch (Exception e)
+                {
+                    throw new SecureStoreException("Unable to retrieve password from Safeguard. SafeguardAppliance: " + context.SafeguardAppliance + " || SafeguardCertThumprint: ..." + context.SafeguardCertThumbprint.Substring(36) + " || IgnoreSSL: " + context.IgnoreSSL.ToString() + " || Error: " + e.Message, e.InnerException);
+                }
             }
             else
             {
